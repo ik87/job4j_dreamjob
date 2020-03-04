@@ -1,0 +1,181 @@
+package ru.job4j.webservice.persistent;
+
+import org.apache.commons.dbcp2.BasicDataSource;
+import ru.job4j.webservice.models.Role;
+import ru.job4j.webservice.models.User;
+
+import java.net.URI;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DbStore implements Store {
+    private final static BasicDataSource SOURCE = new BasicDataSource();
+    private final static DbStore INSTANCE = new DbStore();
+
+    @Override
+    public boolean ifExist(User user) {
+        String sql = "WHERE user_id = ?";
+        return !findBy(sql, x -> x.setInt(1, user.getId())).isEmpty();
+    }
+/*    private DbStore() {
+        SOURCE.setDriverClassName("org.postgresql.Driver");
+        SOURCE.setUrl("jdbc:postgresql://127.0.0.1:5432/webserver");
+        SOURCE.setUsername("postgres");
+        SOURCE.setPassword("password");
+        SOURCE.setMinIdle(5);
+        SOURCE.setMaxIdle(10);
+        SOURCE.setMaxOpenPreparedStatements(100);
+    }*/
+    private DbStore() {
+        try {
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+
+            if (dbUri.getUserInfo() != null) {
+                SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
+                SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
+            }
+            SOURCE.setDriverClassName("org.postgresql.Driver");
+            SOURCE.setUrl(dbUrl);
+            SOURCE.setInitialSize(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static DbStore getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    public void add(User user) {
+        String sql = "INSERT INTO Users(role_id, login, email, password, created) VALUES (?, ?, ?, ?, NOW())";
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement pstm = connection.prepareStatement(sql)) {
+            pstm.setInt(1, user.getRole().getId());
+            pstm.setString(2, user.getLogin());
+            pstm.setString(3, user.getEmail());
+            pstm.setString(4, user.getPassword());
+            pstm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void update(User user) {
+        String sql = "UPDATE users SET role_id = ?, "
+                + "login = ?, email = ?, password = ?, photo = ? WHERE user_id = ?";
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement pstm = connection.prepareStatement(sql)) {
+            pstm.setInt(1, user.getRole().getId());
+            pstm.setString(2, user.getLogin());
+            pstm.setString(3, user.getEmail());
+            pstm.setString(4, user.getPassword());
+            pstm.setBytes(5, user.getPhoto());
+            pstm.setInt(6, user.getId());
+
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(User user) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, user.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<User> findAll() {
+        return findBy("", null);
+    }
+
+    @Override
+    public User findById(User user) {
+        String sql = "WHERE user_id = ?";
+        List<User> result = findBy(sql, x -> x.setInt(1, user.getId()));
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Override
+    public User findByLogin(User user) {
+        String sql = "WHERE login = ?";
+        List<User> result = findBy(sql, x -> x.setString(1, user.getLogin()));
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Override
+    public User findByLoginAndPassword(User user) {
+        String sql = "WHERE login = ? AND password = ?";
+        List<User> result = findBy(sql, x -> {
+            x.setString(1, user.getLogin());
+            x.setString(2, user.getPassword());
+        });
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    /**
+     * General-purpose query method
+     *
+     * @param where any sql WHERE query
+     * @param ps    functionality interface the same Consumer but can throws SQLException or NULL
+     * @return array items
+     */
+    private List<User> findBy(String where, ConsumerX<PreparedStatement> ps) {
+        String sql = "SELECT user_id, u.role_id, role, login, email, password, created, photo "
+                + "FROM users u JOIN roles r ON r.role_id = u.role_id " + where;
+        List<User> users = new ArrayList<>();
+        try (Connection connection = SOURCE.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            if (ps != null) {
+                ps.accept(pstmt);
+            }
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                Role role = new Role();
+
+                role.setId(rs.getInt("role_id"));
+                role.setRole(rs.getString("role"));
+
+                user.setId(rs.getInt("user_id"));
+                user.setLogin(rs.getString("login"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setCreated((rs.getTimestamp("created").getTime()));
+                user.setPhoto(rs.getBytes("photo"));
+
+                user.setRole(role);
+
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    /**
+     * The same Consumer but can throws SQLException
+     *
+     * @param <T> for example  PreparedStatement
+     */
+    interface ConsumerX<T> {
+        void accept(T obj) throws SQLException;
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return null;
+    }
+}

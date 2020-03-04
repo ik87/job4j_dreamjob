@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+    <display-name>Archetype Created Web Application</display-name>
+
+    <!-- Settings filters -->
+
+    <filter>
+        <filter-name>Authentication</filter-name>
+        <filter-class>ru.job4j.webservice.filters.AuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Authentication</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>Authorization</filter-name>
+        <filter-class>ru.job4j.webservice.filters.RoleFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Authorization</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <!-- Servlets without role -->
+
+    <servlet>
+        <servlet-name>Signin</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Signin</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlets for the user role - /user/* -->
+    <servlet>
+        <servlet-name>UserEntryPoint</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.user.MainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserEntryPoint</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserProfileEdit</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.user.EditServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserProfileEdit</servlet-name>
+        <url-pattern>/user/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UploadUser</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.user.UploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UploadUser</servlet-name>
+        <url-pattern>/user/upload</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlets for the admin role - /admin/* -->
+    <servlet>
+        <servlet-name>AdminEntryPoint</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.admin.MainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminEntryPoint</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminProfile</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.admin.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProfile</servlet-name>
+        <url-pattern>/admin/profile</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminProfileEdit</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.admin.EditServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProfileEdit</servlet-name>
+        <url-pattern>/admin/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UploadAdmin</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.admin.UploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UploadAdmin</servlet-name>
+        <url-pattern>/admin/upload</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Signup</servlet-name>
+        <url-pattern>/admin/add</url-pattern>
+    </servlet-mapping>
+
+    <!-- Common servlets -->
+
+    <servlet>
+        <servlet-name>Signout</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.SignoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Signout</servlet-name>
+        <url-pattern>/signout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Signup</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.SignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Signup</servlet-name>
+        <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+
+
+</web-app>
