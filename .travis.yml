@@ -9,10 +9,10 @@ addons:
 services:
   - postgresql
 
-before_install:
-  - psql --version
-  - psql -c 'create database tracker;' -U postgres
-  - psql -c 'create database parser;' -U postgres
+  # before_install:
+  #- psql --version
+  #- psql -c 'create database tracker;' -U postgres
+  #- psql -c 'create database parser;' -U postgres
 
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
@@ -32,4 +32,4 @@ notifications:
 
 env:
   global:
-  - CODECOV_TOKEN="de9d93d3-e162-422f-a34d-f9798bd1d807"
+  - CODECOV_TOKEN="3407b554-ee08-48e6-a0cb-43baf0a3a90e"
