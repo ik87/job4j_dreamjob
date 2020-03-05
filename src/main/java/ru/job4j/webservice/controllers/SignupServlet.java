@@ -32,7 +32,7 @@ public class SignupServlet extends HttpServlet {
             }
             validate.add(user);
         }
-        resp.sendRedirect(req.getContextPath()+"/");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }
 
