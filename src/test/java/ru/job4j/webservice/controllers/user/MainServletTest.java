@@ -1,8 +1,9 @@
 package ru.job4j.webservice.controllers.user;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import ru.job4j.webservice.controllers.SignupServlet;
 import ru.job4j.webservice.models.Role;
 import ru.job4j.webservice.models.User;
 import ru.job4j.webservice.persistent.MemoryStore;
@@ -19,10 +20,12 @@ import java.io.IOException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@RunWith(PowerMockRunner.class)
 public class MainServletTest {
+
     @Test
     public void whenUserChangeHimselfThenChanged() throws ServletException, IOException {
         //получаем статический валидатор

@@ -1,6 +1,8 @@
 package ru.job4j.webservice.controllers;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import ru.job4j.webservice.models.User;
 import ru.job4j.webservice.persistent.MemoryStore;
@@ -19,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-
+@RunWith(PowerMockRunner.class)
 public class SignupServletTest {
 
     @Test
