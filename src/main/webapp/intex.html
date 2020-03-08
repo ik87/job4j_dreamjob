@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function validate() {
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var sex = $('input[name="sex"]:checked').val();
+
+            var fields = '';
+
+            if (name == '') {
+                fields += '[Name]'
+            }
+
+            if (surname == '') {
+                fields += '[Surname]';
+            }
+
+            if (typeof sex === 'undefined') {
+                fields += '[Sex]';
+            }
+
+            if (fields != '') {
+                alert("You have to fill fields: " + fields);
+            } else {
+                alert("Good morning");
+            }
+
+            return false;
+        }
+
+        function addRow() {
+
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var sex = $('input[name="sex"]:checked').val();
+            var description = $('#description').val();
+
+
+            $('#table tr:last').after(
+                '<tr> <td>' + name + '</td> ' +
+                '<td>' + surname + '</td>' +
+                ' <td>' + sex + '</td> ' +
+                ' <td>' + description + '</td> </tr>');
+            return false;
+        }
+    </script>
+</head>
+<body>
+
+
+<div class="container">
+    <h1 class="text-center">My bootstrap page</h1>
+    <h2>Example form</h2>
+    <form action="#">
+        <div class="form-group">
+            <label for="name">Name: </label>
+            <input class="form-control" id="name" type="text" id="name">
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname: </label>
+            <input class="form-control" id="surname" type="text" id="surname">
+        </div>
+        <div class="form-group">
+            <label>Sex: </label>
+            <label class="radio-inline">
+                <input type="radio" name="sex"  value="Male">Male
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="sex"  value="Female">Female
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" rows="5" id="description"></textarea>
+        </div>
+        <button class="btn btn-default" type="submit" onclick="return validate()">Submit</button>
+        <button class="btn btn-default" type="add row" onclick="return addRow()">Add row</button>
+    </form>
+    <hr>
+    <h2>Example table</h2>
+    <table id="table" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Sex</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>Male</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, tempora.</td>
+        </tr>
+        <tr>
+            <td>Mary</td>
+            <td>Moe</td>
+            <td>Female</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore eveniet ex maiores quas quibusdam ut.
+            </td>
+        </tr>
+        <tr>
+            <td>July</td>
+            <td>Dooley</td>
+            <td>Female</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur et nisi vel?</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
