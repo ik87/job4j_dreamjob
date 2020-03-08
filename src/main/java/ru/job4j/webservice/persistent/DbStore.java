@@ -18,15 +18,7 @@ public class DbStore implements Store {
         String sql = "WHERE user_id = ?";
         return !findBy(sql, x -> x.setInt(1, user.getId())).isEmpty();
     }
-/*    private DbStore() {
-        SOURCE.setDriverClassName("org.postgresql.Driver");
-        SOURCE.setUrl("jdbc:postgresql://127.0.0.1:5432/webserver");
-        SOURCE.setUsername("postgres");
-        SOURCE.setPassword("password");
-        SOURCE.setMinIdle(5);
-        SOURCE.setMaxIdle(10);
-        SOURCE.setMaxOpenPreparedStatements(100);
-    }*/
+
     private DbStore() {
         try {
             URI dbUri = new URI(System.getenv("DATABASE_URL"));
