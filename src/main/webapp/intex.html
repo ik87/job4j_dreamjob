@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function validate() {
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var sexChoice1 = $('#sexChoice1').prop("checked");
+            var sexChoice2 = $('#sexChoice2').prop("checked");
+
+            var fields = '';
+
+            if (name == '') {
+                fields += '[Name]'
+            }
+
+            if (surname == '') {
+                fields += '[Surname]';
+            }
+
+            if (!(sexChoice1 | sexChoice2)) {
+                fields += '[Sex]';
+            }
+            if (fields != '') {
+                alert("You have to fill fields: " + fields);
+            } else {
+                alert("Good morning");
+            }
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+
+
+<div class="container">
+    <h1 class="text-center">My bootstrap page</h1>
+    <h2>Example form</h2>
+    <form action="#">
+        <div class="form-group">
+            <label for="name">Name: </label>
+            <input class="form-control" id="name" type="text" id="name">
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname: </label>
+            <input class="form-control" id="surname" type="text" id="surname">
+        </div>
+        <div class="form-group">
+            <label>Sex: </label>
+            <label class="radio-inline">
+                <input type="radio" name="sex" id="sexChoice1">Male
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="sex" id="sexChoice2">Female
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="comment">Description:</label>
+            <textarea class="form-control" rows="5" id="comment"></textarea>
+        </div>
+        <button class="btn btn-default" type="submit" onclick="return validate()">Submit</button>
+    </form>
+    <hr>
+    <h2>Example table</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+        </tr>
+        <tr>
+            <td>Mary</td>
+            <td>Moe</td>
+            <td>mary@example.com</td>
+        </tr>
+        <tr>
+            <td>July</td>
+            <td>Dooley</td>
+            <td>july@example.com</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
