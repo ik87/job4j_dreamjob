@@ -11,8 +11,7 @@
         function validate() {
             var name = $('#name').val();
             var surname = $('#surname').val();
-            var sexChoice1 = $('#sexChoice1').prop("checked");
-            var sexChoice2 = $('#sexChoice2').prop("checked");
+            var sex = $('input[name="sex"]:checked').val();
 
             var fields = '';
 
@@ -24,15 +23,32 @@
                 fields += '[Surname]';
             }
 
-            if (!(sexChoice1 | sexChoice2)) {
+            if (typeof sex === 'undefined') {
                 fields += '[Sex]';
             }
+			
             if (fields != '') {
                 alert("You have to fill fields: " + fields);
             } else {
                 alert("Good morning");
             }
 
+            return false;
+        }
+
+        function addRow() {
+
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var sex = $('input[name="sex"]:checked').val();
+            var description = $('#description').val();
+
+
+            $('#table tr:last').after(
+                '<tr> <td>' + name + '</td> ' +
+                '<td>' + surname + '</td>' +
+                ' <td>' + sex + '</td> ' +
+                ' <td>' + description + '</td> </tr>');
             return false;
         }
     </script>
@@ -55,43 +71,49 @@
         <div class="form-group">
             <label>Sex: </label>
             <label class="radio-inline">
-                <input type="radio" name="sex" id="sexChoice1">Male
+                <input type="radio" name="sex"  value="Male">Male
             </label>
             <label class="radio-inline">
-                <input type="radio" name="sex" id="sexChoice2">Female
+                <input type="radio" name="sex"  value="Female">Female
             </label>
         </div>
         <div class="form-group">
-            <label for="comment">Description:</label>
-            <textarea class="form-control" rows="5" id="comment"></textarea>
+            <label for="description">Description:</label>
+            <textarea class="form-control" rows="5" id="description"></textarea>
         </div>
         <button class="btn btn-default" type="submit" onclick="return validate()">Submit</button>
+        <button class="btn btn-default" type="add row" onclick="return addRow()">Add row</button>
     </form>
     <hr>
     <h2>Example table</h2>
-    <table class="table table-striped">
+    <table id="table" class="table table-striped">
         <thead>
         <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Sex</th>
+            <th>Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>John</td>
             <td>Doe</td>
-            <td>john@example.com</td>
+            <td>Male</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, tempora.</td>
         </tr>
         <tr>
             <td>Mary</td>
             <td>Moe</td>
-            <td>mary@example.com</td>
+            <td>Female</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore eveniet ex maiores quas quibusdam ut.
+            </td>
         </tr>
         <tr>
             <td>July</td>
             <td>Dooley</td>
-            <td>july@example.com</td>
+            <td>Female</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur et nisi vel?</td>
         </tr>
         </tbody>
     </table>
