@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class LoginServlet extends HttpServlet {
 
@@ -25,20 +26,21 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User user = Utils.propertiesToUser(req);
-        HttpSession session = req.getSession();
-        try {
 
-            User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
+        User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
+
+        HttpSession session = req.getSession();
+        synchronized (session) {
             if (authUser != null) {
                 session.setAttribute("user", authUser);
-                resp.sendRedirect(req.getContextPath() + "/");
+                resp.setContentType("text/html;charset=utf-8");
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
-                req.setAttribute("error", "Credential invalid");
-                doGet(req, resp);
+                resp.setContentType("text/html;charset=utf-8");
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
         }
+
 
     }
 

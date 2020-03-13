@@ -7,7 +7,6 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <!-- Settings filters -->
-<!--
     <filter>
         <filter-name>Authentication</filter-name>
         <filter-class>ru.job4j.webservice.filters.AuthFilter</filter-class>
@@ -27,17 +26,16 @@
         <filter-name>Authorization</filter-name>
         <url-pattern>*</url-pattern>
     </filter-mapping>
--->
 
     <!-- Servlets without role -->
 
     <servlet>
-        <servlet-name>Signin</servlet-name>
+        <servlet-name>Login</servlet-name>
         <servlet-class>ru.job4j.webservice.controllers.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Signin</servlet-name>
-        <url-pattern>/signin</url-pattern>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
     <!-- Servlets for the user role - /user/* -->
