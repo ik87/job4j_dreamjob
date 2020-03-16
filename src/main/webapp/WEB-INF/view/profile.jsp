@@ -6,16 +6,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>User profile</title>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    <%--JS--%>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+
+
+        function send() {
+            var input = $('#inputGroupFile03')[0];
+            var file = input.files[0];
+            var id = $('#id').val();
+            var data = new FormData();
+
+            data.append('file', file);
+            data.append('id', id);
+
+            if (typeof file !== 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "${pageContext.request.contextPath}/${sessionScope.user.role.role}/upload",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $('#img').attr('src', 'data:image/jpeg;base64,' + data);
+                    }
+                });
+            }
+        }
+
+        function remove() {
+            var id = $('#id').val();
+
+            $.ajax({
+                type: 'POST',
+                url: "${pageContext.request.contextPath}/${sessionScope.user.role.role}",
+                data: {id: id, action: "deleteImg"},
+                dataType: 'text'
+            }).done(function (data) {
+                $('#img').attr('src', 'data:image/jpeg;base64,');
+            });
+        }
+
+
+    </script>
+
+
     <style>
-        /*                        div {
-                                    border: 1px solid cadetblue !important;
-                                }*/
+        /*                                div {
+                                            border: 1px solid cadetblue !important;
+                                        }*/
         .container-sm {
             max-width: 850px;
         }
@@ -31,7 +82,8 @@
             <ul class="nav">
                 <c:if test="${sessionScope.user.role.role eq 'admin'}">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/${sessionScope.user.role.role}">Users list</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/${sessionScope.user.role.role}">Users
+                            list</a>
                     </li>
                 </c:if>
                 <li class="nav-item">
@@ -51,25 +103,33 @@
         <!--photo image-->
         <div class="col-sm-5  col-md-4">
             <!--row 2-->
+
             <!--img-->
-            <img class="rounded mx-auto d-block" style="width: 100%" src="data:image/jpeg;base64,${userDto.photo}"/>
+            <img class="rounded mx-auto d-block" id="img" style="width: 100%"
+                 src="data:image/jpeg;base64,${userDto.photo}"/>
+
             <!--upload img-->
-            <form method='post' action='${pageContext.request.contextPath}/${sessionScope.user.role.role}/upload'
-                  enctype="multipart/form-data">
-                <div class="form-group">
-                    <input type='hidden' name='id' value='${userDto.userId}'>
-                    <input class="form-control-file mt-1" type='file' name='file'>
-                    <input type="submit" value="Upload"/>
+            <from>
+                <input id="id" type='hidden' name='id' value='${userDto.userId}'>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <div class="input-group mt-3">
+                            <div class="custom-file">
+                                <input id="inputGroupFile03" type="file" class="custom-file-input">
+                                <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </form>
-            <!--delete img-->
-            <form method="post" action="${pageContext.request.contextPath}/${sessionScope.user.role.role}">
-                <div class="form-group">
-                    <input type='hidden' name='id' value='${userDto.userId}'>
-                    <input type='hidden' name='action' value='deleteImg'>
-                    <input type="submit" value="delete image"/>
-                </div>
-            </form>
+            </from>
+
+            <div class="btn-group mt-1">
+            <!--upload img button-->
+                <button type="button" class="btn btn-primary" onclick="send()">upload</button>
+            <!--delete img button-->
+                <button type="button" class="btn btn-danger" onclick="remove()">delete</button>
+            </div>
+
         </div>
 
         <!--user profile-->
@@ -104,5 +164,19 @@
 
     </div>
 </div>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script>
+    bsCustomFileInput.init()
+</script>
+
 </body>
 </html>

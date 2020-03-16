@@ -11,12 +11,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <!-- Custom styles for this template -->
-    <link href="css/signin.css" rel="stylesheet">
 
 
     <%--JS--%>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
 
     <style>
         .bd-placeholder-img {
@@ -34,7 +36,6 @@
             }
         }
     </style>
-
     <script>
         function signin() {
             var fields = validate();
@@ -88,17 +89,13 @@
     <title>service entrance</title>
 </head>
 <body class="text-center">
-
 <form class="form-signin" method="post">
     <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
     <label for="inputLogin" class="sr-only">Login</label>
-    <input id="login" class="form-control" type="text" id="inputLogin" placeholder="login" name="login" required
-           autofocus>
+    <input id="login" class="form-control" type="text" id="inputLogin" placeholder="login" name="login" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
-    <input id="pass" class="form-control" type="password" id="inputPassword" placeholder="password" name="password"
-           required>
-    <button class="btn btn-lg btn-secondary btn-block btn-primary" onclick="return signin()">Sign in
-    </button>
+    <input id="pass" class="form-control" type="password" id="inputPassword" placeholder="password" name="password" required>
+    <button class="btn btn-lg btn-primary btn-block" onclick="return signin()">Sign in</button>
     <button class="btn btn-lg btn-secondary btn-block" href="signup">Sign up</button>
 </form>
 </body>
