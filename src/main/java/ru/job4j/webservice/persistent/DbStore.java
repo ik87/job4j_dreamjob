@@ -117,9 +117,9 @@ public class DbStore implements Store {
     }
 
     /**
-     * General-purpose query method
+     * General-purpose cities method
      *
-     * @param where any sql WHERE query
+     * @param where any sql WHERE cities
      * @param ps    functionality interface the same Consumer but can throws SQLException or NULL
      * @return array items
      */

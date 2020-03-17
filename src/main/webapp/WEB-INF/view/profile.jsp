@@ -20,8 +20,6 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script>
-
-
         function send() {
             var input = $('#inputGroupFile03')[0];
             var file = input.files[0];
@@ -58,8 +56,6 @@
                 $('#img').attr('src', 'data:image/jpeg;base64,');
             });
         }
-
-
     </script>
 
 
