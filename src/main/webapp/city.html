@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- js -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <script type="text/javascript" src="js/city.js"></script>
 
@@ -12,6 +15,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 
     <title>city</title>
 </head>
@@ -19,8 +24,12 @@
 <div class="container">
     <form>
         <div class="form-group">
+            <label for="continent">Continent</label>
+            <input type="text" class="form-control" id="continent">
+        </div>
+        <div class="form-group">
             <label for="country">Country</label>
-            <input type="text" class="form-control" id="country">
+            <input type="text" class="form-control" id="country" disabled>
         </div>
         <div class="form-group">
             <label for="city">City</label>

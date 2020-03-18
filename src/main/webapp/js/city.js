@@ -19,15 +19,15 @@ const continents = new Parse.Query(Continentscountriescities_Continent);
 const cities = new Parse.Query(Continentscountriescities_City);
 const countries = new Parse.Query(Continentscountriescities_Country);
 
+/*
 
+countries.startsWith("name", 'R');
 
-countries.startsWith("name",'R');
-
-countries.find().then((result)=> {
-/*    if (typeof document !== 'undefined') {
-        var entity = getArrayName(result);
-        document.write(`found: ${JSON.stringify(entity)}`);
-    }*/
+countries.find().then((result) => {
+    /!*    if (typeof document !== 'undefined') {
+            var entity = getArrayName(result);
+            document.write(`found: ${JSON.stringify(entity)}`);
+        }*!/
 });
 
 
@@ -39,17 +39,32 @@ cities.find().then((results) => {
     // You can use the "get" method to get the value of an attribute
     // Ex: response.get("<ATTRIBUTE_NAME>")
     if (typeof document !== 'undefined') {
-/*        var entity = getArrayName(results);
-        document.write(`found: ${JSON.stringify(entity)}`);
-        console.log('found', results);*/
+        /!*        var entity = getArrayName(results);
+                document.write(`found: ${JSON.stringify(entity)}`);
+                console.log('found', results);*!/
     }
 }, (error) => {
-    /*if (typeof document !== 'undefined') document.write(`Error while fetching Continentscountriescities_Country: ${JSON.stringify(error)}`);
-    console.error('Error while fetching Continentscountriescities_Country', error);*/
+    /!*if (typeof document !== 'undefined') document.write(`Error while fetching Continentscountriescities_Country: ${JSON.stringify(error)}`);
+    console.error('Error while fetching Continentscountriescities_Country', error);*!/
 });
+*/
 
 
-$('#country').keyup( function () {
-
+$(function () {
+    $("#country").autocomplete({
+        source: function (request, response) {
+            var word = request.term[0].toUpperCase() + request.term.slice(1).toLowerCase();
+            countries.startsWith("name", word);
+            countries.find().then(function (results) {
+                var res = results.map(item => item.attributes.name)
+                response(res);
+            });
+            return false;
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            console.log("selected " + ui.item.value)
+            return false;
+        }
+    });
 });
-
