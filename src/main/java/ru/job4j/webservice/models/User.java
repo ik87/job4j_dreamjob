@@ -1,5 +1,6 @@
 package ru.job4j.webservice.models;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class User {
@@ -10,6 +11,8 @@ public class User {
     private String email;
     private String password;
     private Long created;
+    private String country;
+    private String city;
 
 
     @Override
@@ -85,15 +88,34 @@ public class User {
         this.created = created;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
-        return "User{"
-                + "id=" + id
-                + ", role=" + role
-                + ", login='" + login + '\''
-                + ", email='" + email + '\''
-                + ", password='" + password + '\''
-                + ", created=" + created
-                + '}';
+        return "User{" +
+                "id=" + id +
+                ", photo=" + Arrays.toString(photo) +
+                ", role=" + role +
+                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", created=" + created +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                '}';
     }
 }

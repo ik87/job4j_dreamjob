@@ -42,13 +42,15 @@ public class DbStore implements Store {
 
     @Override
     public void add(User user) {
-        String sql = "INSERT INTO Users(role_id, login, email, password, created) VALUES (?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO Users(role_id, login, email, password, created, country, city) VALUES (?, ?, ?, ?, NOW(), ?, ?)";
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setInt(1, user.getRole().getId());
             pstm.setString(2, user.getLogin());
             pstm.setString(3, user.getEmail());
             pstm.setString(4, user.getPassword());
+            pstm.setString(5, user.getCountry());
+            pstm.setString(6, user.getCity());
             pstm.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +61,7 @@ public class DbStore implements Store {
     @Override
     public void update(User user) {
         String sql = "UPDATE users SET role_id = ?, "
-                + "login = ?, email = ?, password = ?, photo = ? WHERE user_id = ?";
+                + "login = ?, email = ?, password = ?, photo = ?, country = ?, city = ? WHERE user_id = ?";
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setInt(1, user.getRole().getId());
@@ -67,7 +69,9 @@ public class DbStore implements Store {
             pstm.setString(3, user.getEmail());
             pstm.setString(4, user.getPassword());
             pstm.setBytes(5, user.getPhoto());
-            pstm.setInt(6, user.getId());
+            pstm.setString(6, user.getCountry());
+            pstm.setString(7, user.getCity());
+            pstm.setInt(8, user.getId());
 
             pstm.executeUpdate();
         } catch (SQLException e) {
@@ -124,8 +128,8 @@ public class DbStore implements Store {
      * @return array items
      */
     private List<User> findBy(String where, ConsumerX<PreparedStatement> ps) {
-        String sql = "SELECT user_id, u.role_id, role, login, email, password, created, photo "
-                + "FROM users u JOIN roles r ON r.role_id = u.role_id " + where;
+        String sql = "SELECT user_id, u.role_id, role, login, email, password, created, photo, u.city, u.country" +
+                " FROM users u JOIN roles r ON r.role_id = u.role_id " + where;
         List<User> users = new ArrayList<>();
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -146,6 +150,9 @@ public class DbStore implements Store {
                 user.setPassword(rs.getString("password"));
                 user.setCreated((rs.getTimestamp("created").getTime()));
                 user.setPhoto(rs.getBytes("photo"));
+
+                user.setCountry(rs.getString("country"));
+                user.setCity(rs.getString("city"));
 
                 user.setRole(role);
 

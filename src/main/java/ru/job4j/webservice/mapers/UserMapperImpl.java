@@ -30,6 +30,8 @@ public class UserMapperImpl implements UserMapper {
         userDto.setRoleId(user.getRole() != null ? user.getRole().getId() : null);
         userDto.setCreated(millisecondToStringDate(user.getCreated()));
         userDto.setPassword(user.getPassword());
+        userDto.setCountry(user.getCountry());
+        userDto.setCity(user.getCity());
         return userDto;
     }
 

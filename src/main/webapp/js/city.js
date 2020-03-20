@@ -4,67 +4,41 @@ Parse.initialize(
     'PRCvxZhcFqL8BHsfc3Bi2IcRnA14P5HZbknunC8k' // This is your Javascript key
 );
 
-function getArrayName(results) {
-    var entity = [];
-    results.forEach(item => entity.push("<br>" + item.get("name")));
-    return entity;
-}
-
-const Continentscountriescities_Continent = Parse.Object.extend('Continentscountriescities_Continent');
 const Continentscountriescities_Country = Parse.Object.extend('Continentscountriescities_Country');
 const Continentscountriescities_City = Parse.Object.extend('Continentscountriescities_City');
 
-
-const continents = new Parse.Query(Continentscountriescities_Continent);
-const cities = new Parse.Query(Continentscountriescities_City);
 const countries = new Parse.Query(Continentscountriescities_Country);
-
-/*
-
-countries.startsWith("name", 'R');
-
-countries.find().then((result) => {
-    /!*    if (typeof document !== 'undefined') {
-            var entity = getArrayName(result);
-            document.write(`found: ${JSON.stringify(entity)}`);
-        }*!/
-});
-
-
-cities.startsWith("name", 'Mo');
-
-cities.matchesQuery("country", countries);
-
-cities.find().then((results) => {
-    // You can use the "get" method to get the value of an attribute
-    // Ex: response.get("<ATTRIBUTE_NAME>")
-    if (typeof document !== 'undefined') {
-        /!*        var entity = getArrayName(results);
-                document.write(`found: ${JSON.stringify(entity)}`);
-                console.log('found', results);*!/
-    }
-}, (error) => {
-    /!*if (typeof document !== 'undefined') document.write(`Error while fetching Continentscountriescities_Country: ${JSON.stringify(error)}`);
-    console.error('Error while fetching Continentscountriescities_Country', error);*!/
-});
-*/
+const cities = new Parse.Query(Continentscountriescities_City);
 
 
 $(function () {
-    $("#country").autocomplete({
-        source: function (request, response) {
-            var word = request.term[0].toUpperCase() + request.term.slice(1).toLowerCase();
-            countries.startsWith("name", word);
-            countries.find().then(function (results) {
-                var res = results.map(item => item.attributes.name)
-                response(res);
+
+    autocomplete("#country", countries, function (event, ui) {
+            console.log("selected " + ui.item.value);
+            $("#country").prop('disabled', true);
+            $("#city").prop('disabled', false).focus();
+            cities.matchesQuery("country", countries);
+            autocomplete("#city", cities, function (event, ui) {
+                $("#city").prop('disabled', true);
+                return false;
             });
-            return false;
-        },
-        minLength: 2,
-        select: function (event, ui) {
-            console.log("selected " + ui.item.value)
-            return false;
-        }
     });
+
+    function autocomplete(id, place, then) {
+        $(id).autocomplete({
+            source: function (request, response) {
+                var word = request.term[0].toUpperCase() + request.term.slice(1).toLowerCase();
+                place.startsWith("name", word);
+                place.find().then(function (results) {
+                    var res = results.map(item => item.attributes.name);
+                    response(res);
+                });
+                return false;
+            },
+            select: then,
+            minLength: 2,
+            delay: 100
+        })
+    }
+
 });

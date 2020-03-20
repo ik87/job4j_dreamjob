@@ -58,6 +58,14 @@ public class ValidateService implements Validate {
             oldUser.setPhoto(newUser.getPhoto());
         }
 
+        if (newUser.getCountry() != null) {
+            oldUser.setCountry(newUser.getCountry());
+        }
+
+        if (newUser.getCity() != null) {
+            oldUser.setCity(newUser.getCity());
+        }
+
         if (newUser.getRole() != null && newUser.getRole().getId() != null) {
             oldUser.setRole(newUser.getRole());
         }

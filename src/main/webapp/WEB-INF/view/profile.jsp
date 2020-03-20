@@ -155,6 +155,18 @@
                         <div class="col">${userDto.created}</div>
                     </div>
                 </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-2 font-weight-bold">Country:</div>
+                        <div class="col">${userDto.country}</div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-2 font-weight-bold">City:</div>
+                        <div class="col">${userDto.city}</div>
+                    </div>
+                </li>
             </ul>
         </div>
 
