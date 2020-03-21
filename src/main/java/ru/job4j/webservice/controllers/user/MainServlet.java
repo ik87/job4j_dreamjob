@@ -27,6 +27,7 @@ public class MainServlet extends HttpServlet {
     public void init() throws ServletException {
         actions.put("update", this::update);
         actions.put("deleteImg", this::deleteImg);
+        actions.put("checkPass", this::checkPass);
     }
 
     @Override
@@ -66,6 +67,22 @@ public class MainServlet extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void checkPass(HttpServletRequest req, HttpServletResponse resp) {
+        User user = Utils.propertiesToUser(req);
+        User authUser = Utils.getObjectFromSession(req, "user");
+        try {
+            resp.setContentType("text/html;charset=utf-8");
+            if (authUser.getPassword().equals(user.getPassword())) {
+                resp.getWriter().println("correct");
+            } else {
+                resp.getWriter().println("incorrect");
+            }
+        } catch (IOException e) {
+
+        }
+
     }
 
 }

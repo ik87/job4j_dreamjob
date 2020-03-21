@@ -12,16 +12,27 @@ const cities = new Parse.Query(Continentscountriescities_City);
 
 
 $(function () {
-
-    autocomplete("#country", countries, function (event, ui) {
+    $("#country").on("click", function () {
+        autocomplete("#country", countries, function (event, ui) {
             console.log("selected " + ui.item.value);
-            $("#country").prop('disabled', true);
-            $("#city").prop('disabled', false).focus();
+            //$("#country").prop('disabled', true);
+            $("#city").val('').focus();
             cities.matchesQuery("country", countries);
             autocomplete("#city", cities, function (event, ui) {
-                $("#city").prop('disabled', true);
+                //$("#city").prop('disabled', true);
+                $("#city").blur();
                 return false;
             });
+        });
+    });
+
+    $("#city").on("click", function () {
+        countries.equalTo("name", $("#country").val());
+        cities.matchesQuery("country", countries);
+        autocomplete("#city", cities, function (event, ui) {
+            $("#city").blur();
+            return false;
+        });
     });
 
     function autocomplete(id, place, then) {

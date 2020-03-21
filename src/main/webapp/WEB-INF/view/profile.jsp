@@ -1,7 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="ru.job4j.webservice.service.Utils" %>
-<%@ page import="ru.job4j.webservice.models.User" %>
-<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +9,21 @@
 
     <title>User profile</title>
 
+    <!-- js -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <script type="text/javascript" src="js/city.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <%--JS--%>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        .ui-front {
+            z-index: 9999;
+        }
+    </style>
 
     <script>
         function send() {
@@ -69,7 +75,6 @@
     </style>
 </head>
 <body>
-
 <div class="container-sm">
     <!--row 1-->
     <div class="row  m-3">
@@ -87,6 +92,11 @@
                        href="${pageContext.request.contextPath}/${sessionScope.user.role.role}/edit?id=${userDto.userId}">Edit
                         profile</a>
                 </li>
+
+                <li class="nav-item">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" >Edit profile M</button>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="#">Remove profile</a>
                 </li>
@@ -172,6 +182,9 @@
 
     </div>
 </div>
+<!-- edit profile modal-->
+
+<%@include file="includes/modale-edit-proflie.jsp" %>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -183,6 +196,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 <script>
+    //init for upload file
     bsCustomFileInput.init()
 </script>
 
