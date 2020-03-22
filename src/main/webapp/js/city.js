@@ -15,13 +15,10 @@ $(function () {
     $("#country").on("click", function () {
         autocomplete("#country", countries, function (event, ui) {
             console.log("selected " + ui.item.value);
-            //$("#country").prop('disabled', true);
             $("#city").val('').focus();
             cities.matchesQuery("country", countries);
             autocomplete("#city", cities, function (event, ui) {
-                //$("#city").prop('disabled', true);
                 $("#city").blur();
-                return false;
             });
         });
     });
@@ -31,7 +28,6 @@ $(function () {
         cities.matchesQuery("country", countries);
         autocomplete("#city", cities, function (event, ui) {
             $("#city").blur();
-            return false;
         });
     });
 
@@ -44,7 +40,6 @@ $(function () {
                     var res = results.map(item => item.attributes.name);
                     response(res);
                 });
-                return false;
             },
             select: then,
             minLength: 2,

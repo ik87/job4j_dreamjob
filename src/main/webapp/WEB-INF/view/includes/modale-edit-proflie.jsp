@@ -1,37 +1,145 @@
 <!--module-->
 <script>
+
     $(function () {
         $('#editModal').on('show.bs.modal', function (event) {
             $('#login').val('${userDto.login}');
             $('#email').val('${userDto.email}');
-            $('#password').val('yourpassword');
             $('#city').val('${userDto.city}');
             $('#country').val('${userDto.country}');
             $('#roleId').val('${userDto.roleId}');
         });
-        $("#editPassword").click(function () {
 
-            var pass = $('#pass').val();
+        $('#collapsePass').on('show.bs.collapse', function () {
+            $('#passA').val('').removeClass("is-valid").addClass("is-invalid");
+            $('#passB').val('').removeClass("is-valid").addClass("is-invalid");
+            $('#displayPassB').addClass("d-none");
 
-            var status;
+        });
+
+
+        $('#passA').keyup(function () {
+            if ($(this).val().length > 3) {
+                $(this).removeClass("is-invalid").addClass("is-valid");
+                $('#displayPassB').removeClass("d-none");
+            }
+            if ($(this).val().length < 3) {
+                $(this).removeClass("is-valid").addClass("is-invalid");
+                $('#passB').val('');
+                $('#displayPassB').addClass("d-none");
+            }
+        });
+
+        $('#passB').keyup(function () {
+            if ($(this).val() == $('#passA').val()) {
+                $(this).removeClass("is-invalid").addClass("is-valid");
+            } else {
+                $(this).removeClass("is-valid").addClass("is-invalid");
+            }
+        });
+
+        $('#save').click(function (event) {
+            var data = credential();
+            if(data != null) {
+                send(data);
+            }
+        });
+
+        function credential() {
+            var data = null;
+            var _login = $('#login');
+            var _email = $('#email');
+            var _passA = $('#passA');
+            var _passB = $('#passB');
+            var _country = $('#country');
+            var _city = $('#city');
+            var _ruleId = $('#roleId option:selected');
+
+            var correct = true;
+
+            //check login
+            correct &= check(_login, checkLength);
+
+            //email
+            correct &= check(_email, checkEmail);
+
+            //check pass
+            if ($('#collapsePass').hasClass('collapse show')) {
+                if (check(_passA, checkLength) && check(_passB, checkLength)) {
+                    if (_passA.val() != _passB.val()) {
+                        check(_passA, x => true);
+                        check(_passB, x => true);
+                        correct &= false;
+                    }
+                } else {
+                    correct &= false;
+                }
+            }
+
+
+            //check country
+            correct &= check(_country, checkLength);
+            //check city
+            correct &= check(_city, checkLength);
+
+            if(correct) {
+                data = {
+                    login: _login.val(),
+                    email: _email.val(),
+                    password: _passB.val(),
+                    rule_id: _ruleId.val(),
+                    country: _country.val(),
+                    city: _city.val(),
+                    action: 'update',
+                    id: '${userDto.userId}'
+                }
+            }
+
+            return data;
+        }
+
+        function send(data) {
             $.ajax({
                 type: 'POST',
-                url: "",
-                data: {password: pass},
+                url: "${pageContext.request.contextPath}/${sessionScope.user.role.role}",
+                data: data,
                 dataType: 'text'
             }).done(function (data) {
-                location.reload();
+                //location.reload();
             }).fail(function (err) {
-                $('body').prepend(
+/*                $('body').prepend(
                     "<div class='fixed-top alert alert-danger ' role='alert'>" +
                     "Login or password is not correct" +
                     "</div>"
-                );
+                );*/
             });
+        }
 
-            console.log("edit password");
-        })
-    });
+        function check(field, check) {
+            var correct = true;
+            if (check(field)) {
+                correct = false;
+                field.removeClass("is-valid").addClass("is-invalid");
+            } else {
+                field.removeClass("is-invalid").addClass("is-valid");
+            }
+            return correct;
+        }
+
+        function checkLength(el) {
+            return el.val().length < 3;
+        }
+
+
+        function checkEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            console.log(!re.test(email.val()));
+            return !re.test(email.val());
+        }
+
+
+    })
+    ;
 
 
 </script>
@@ -50,11 +158,14 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="login">Login</label>
-                            <input type="text" class="form-control" id="login" name="login">
+                            <input type="text" class="form-control" id="login" name="login" required>
                         </div>
                         <div class="form-group col-md-12">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" value="" name="email">
+                            <input type="email" class="form-control" id="email" value="" name="email" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
                         </div>
 
                         <c:if test="${user.id  ne  userDto.userId}">
@@ -66,37 +177,42 @@
                                 </select>
                             </div>
                         </c:if>
-                        <div class="form-group  col-12" id="passwordGroup">
-                            <label for="password">Password</label>
-                            <div class="input-group ">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" id="editPassword" type="button">Change
-                                        password
-                                    </button>
+                        <div class="form-group col-12">
+                            <label>Password</label>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#collapsePass" aria-expanded="false" aria-controls="collapsePass">
+                                    Change
+                                    password
+                                </button>
+                            </div>
+                            <!--password collapse-->
+                            <div class="collapse col-12" id="collapsePass">
+                                <div class="card card-body">
+                                    <label for="passA">New password</label>
+                                    <input type="password" class="form-control" id="passA" required>
+                                    <div id="displayPassB" class="d-none">
+                                        <label for="passB">Repeat new password</label>
+                                        <input type="password" class="form-control" id="passB" required>
+                                    </div>
                                 </div>
-                                <input type="password" class="form-control" id="password" disabled>
                             </div>
                         </div>
-                        <%--<div class="form-group col-md-12">
-                            <button type="button" class="btn btn-danger mb-1">change</button>
-                            <label  for="password">Password</label>
-                            <input type="password" class="form-control" id="password" value="" name="password">
-                        </div>--%>
 
                         <div class="form-group  col-md-12">
                             <label for="country">Country</label>
-                            <input type="text" class="form-control" id="country" value="">
+                            <input type="text" class="form-control" id="country" value="" required>
                             <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" value="">
+                            <input type="text" class="form-control" id="city" value="" required>
                         </div>
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="id" value="">
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save">Save</button>
+                </div>
             </div>
         </div>
     </div>

@@ -18,14 +18,13 @@ public class RoleFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();
-        if (request.getRequestURI().contains("css/") || request.getRequestURI().contains("js/")) {
-            chain.doFilter(req, resp);
-            return;
-        }
+
         synchronized (session) {
             User user = (User) session.getAttribute("user");
             if (user != null) {
-                if (request.getRequestURI().contains("/signout")) {
+                if (request.getRequestURI().contains("css/") || request.getRequestURI().contains("js/")) {
+                    chain.doFilter(req, resp);
+                }else if (request.getRequestURI().contains("/signout")) {
                     chain.doFilter(req, resp);
                 }  else if (request.getRequestURI().contains("/signup")) {
                     chain.doFilter(req, resp);
