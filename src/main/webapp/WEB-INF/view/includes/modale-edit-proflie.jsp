@@ -3,11 +3,11 @@
 
     $(function () {
         $('#editModal').on('show.bs.modal', function (event) {
-            $('#login').val('${userDto.login}');
-            $('#email').val('${userDto.email}');
-            $('#city').val('${userDto.city}');
-            $('#country').val('${userDto.country}');
-            $('#roleId').val('${userDto.roleId}');
+            $('#e_login').val($('#login').html());
+            $('#e_email').val($('#email').html());
+            $('#e_city').val($('#city').html());
+            $('#e_country').val($('#country').html());
+            $('#e_roleId').val($('#roleId').html());
         });
 
         $('#collapsePass').on('show.bs.collapse', function () {
@@ -18,6 +18,7 @@
         });
 
 
+        <!-- check password -->
         $('#passA').keyup(function () {
             if ($(this).val().length > 3) {
                 $(this).removeClass("is-invalid").addClass("is-valid");
@@ -38,6 +39,7 @@
             }
         });
 
+        <!-- click save -->
         $('#save').click(function (event) {
             var data = credential();
             if(data != null) {
@@ -47,13 +49,13 @@
 
         function credential() {
             var data = null;
-            var _login = $('#login');
-            var _email = $('#email');
+            var _login = $('#e_login');
+            var _email = $('#e_email');
             var _passA = $('#passA');
             var _passB = $('#passB');
-            var _country = $('#country');
-            var _city = $('#city');
-            var _ruleId = $('#roleId option:selected');
+            var _country = $('#e_country');
+            var _city = $('#e_city');
+            var _ruleId = $('#e_roleId option:selected');
 
             var correct = true;
 
@@ -102,10 +104,19 @@
             $.ajax({
                 type: 'POST',
                 url: "${pageContext.request.contextPath}/${sessionScope.user.role.role}",
+               //data: JSON.stringify(data),
                 data: data,
+                //contentType: "application/json",
                 dataType: 'text'
-            }).done(function (data) {
-                //location.reload();
+            }).done(function (json) {
+                var data = JSON.parse(json);
+                $("#login").html(data.login);
+                $("#email").html(data.email);
+                $("#role").html(data.role);
+                $("#country").html(data.country);
+                $("#city").html(data.city);
+                console.log(data);
+
             }).fail(function (err) {
 /*                $('body').prepend(
                     "<div class='fixed-top alert alert-danger ' role='alert'>" +
@@ -157,12 +168,12 @@
                 <form>
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label for="login">Login</label>
-                            <input type="text" class="form-control" id="login" name="login" required>
+                            <label for="e_login">Login</label>
+                            <input type="text" class="form-control" id="e_login" name="login" required>
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" value="" name="email" required>
+                            <label for="e_email">Email</label>
+                            <input type="email" class="form-control" id="e_email" value="" name="email" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -170,8 +181,8 @@
 
                         <c:if test="${user.id  ne  userDto.userId}">
                             <div class="form-group col-md-4">
-                                <label for="roleId">Role</label>
-                                <select name="role_id" id="roleId" class="form-control">
+                                <label for="e_roleId">Role</label>
+                                <select name="role_id" id="e_roleId" class="form-control">
                                     <option value="2" selected>User</option>
                                     <option value="1">Admin</option>
                                 </select>
@@ -200,10 +211,10 @@
                         </div>
 
                         <div class="form-group  col-md-12">
-                            <label for="country">Country</label>
-                            <input type="text" class="form-control" id="country" value="" required>
-                            <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" value="" required>
+                            <label for="e_country">Country</label>
+                            <input type="text" class="form-control" id="e_country" value="" required>
+                            <label for="e_city">City</label>
+                            <input type="text" class="form-control" id="e_city" value="" required>
                         </div>
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="id" value="">
@@ -211,7 +222,7 @@
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="save">Save</button>
+                    <button type="button" class="btn btn-primary" id="save" data-dismiss="modal">Save</button>
                 </div>
             </div>
         </div>

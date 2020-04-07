@@ -144,37 +144,37 @@
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">Login:</div>
-                        <div class="col">${userDto.login}</div>
+                        <div id="login" class="col">${userDto.login}</div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">Email:</div>
-                        <div class="col">${userDto.email}</div>
+                        <div id="email" class="col">${userDto.email}</div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">Role:</div>
-                        <div class="col">${userDto.role}</div>
+                        <div id="role" class="col">${userDto.role}</div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">Created:</div>
-                        <div class="col">${userDto.created}</div>
+                        <div id="created" class="col">${userDto.created}</div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">Country:</div>
-                        <div class="col">${userDto.country}</div>
+                        <div id="country" class="col">${userDto.country}</div>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-sm-12 col-md-2 font-weight-bold">City:</div>
-                        <div class="col">${userDto.city}</div>
+                        <div id="city" class="col">${userDto.city}</div>
                     </div>
                 </li>
             </ul>

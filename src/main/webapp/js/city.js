@@ -12,22 +12,22 @@ const cities = new Parse.Query(Continentscountriescities_City);
 
 
 $(function () {
-    $("#country").on("click", function () {
+    $("#e_country").on("click", function () {
         autocomplete("#country", countries, function (event, ui) {
             console.log("selected " + ui.item.value);
-            $("#city").val('').focus();
+            $("#e_city").val('').focus();
             cities.matchesQuery("country", countries);
             autocomplete("#city", cities, function (event, ui) {
-                $("#city").blur();
+                $("#e_city").blur();
             });
         });
     });
 
-    $("#city").on("click", function () {
-        countries.equalTo("name", $("#country").val());
+    $("#e_city").on("click", function () {
+        countries.equalTo("name", $("#e_country").val());
         cities.matchesQuery("country", countries);
         autocomplete("#city", cities, function (event, ui) {
-            $("#city").blur();
+            $("#e_city").blur();
         });
     });
 

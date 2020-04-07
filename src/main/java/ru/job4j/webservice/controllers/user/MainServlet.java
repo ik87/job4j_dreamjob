@@ -1,5 +1,6 @@
 package ru.job4j.webservice.controllers.user;
 
+import com.google.gson.Gson;
 import ru.job4j.webservice.dto.UserDto;
 import ru.job4j.webservice.mapers.UserMapper;
 import ru.job4j.webservice.mapers.UserMapperImpl;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -33,8 +35,19 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User authUser = Utils.getObjectFromSession(req, "user");
         UserDto userDto = userMapper.toDto(authUser);
-        req.setAttribute("userDto", userDto);
-        req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+
+        boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+
+        if (ajax) {
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+        } else {
+            req.setAttribute("userDto", userDto);
+            req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+        }
     }
 
     @Override
@@ -48,24 +61,25 @@ public class MainServlet extends HttpServlet {
         User changed = Utils.propertiesToUser(req);
         User authUser = Utils.getObjectFromSession(req, "user");
         User user = validate.findById(authUser);
-
         validate.update(user, changed);
         try {
-            resp.sendRedirect(req.getContextPath() + "/");
+            UserDto userDto = userMapper.toDto(user);
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
         User authUser = Utils.getObjectFromSession(req, "user");
         authUser.setPhoto(null);
         validate.update(authUser);
-        try {
-            resp.sendRedirect(req.getContextPath() + "/");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
 }
