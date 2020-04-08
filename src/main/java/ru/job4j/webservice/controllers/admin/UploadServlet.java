@@ -40,6 +40,8 @@ public class UploadServlet extends HttpServlet {
             user.setPhoto(bytes);
             validate.update(user);
             UserDto userDto = userMapper.toDto(user);
+            resp.setContentType("image/png");
+            resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().print(userDto.getPhoto());
         }
     }

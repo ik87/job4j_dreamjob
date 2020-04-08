@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -35,19 +34,9 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User authUser = Utils.getObjectFromSession(req, "user");
         UserDto userDto = userMapper.toDto(authUser);
+        req.setAttribute("userDto", userDto);
+        req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
 
-        boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
-
-        if (ajax) {
-            String json = new Gson().toJson(userDto);
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        } else {
-            req.setAttribute("userDto", userDto);
-            req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
-        }
     }
 
     @Override

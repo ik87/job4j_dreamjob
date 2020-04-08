@@ -55,7 +55,7 @@
             var _passB = $('#passB');
             var _country = $('#e_country');
             var _city = $('#e_city');
-            var _ruleId = $('#e_roleId option:selected');
+            var _roleId = $('#e_roleId option:selected');
 
             var correct = true;
 
@@ -89,7 +89,7 @@
                     login: _login.val(),
                     email: _email.val(),
                     password: _passB.val(),
-                    rule_id: _ruleId.val(),
+                    role_id: _roleId.val(),
                     country: _country.val(),
                     city: _city.val(),
                     action: 'update',

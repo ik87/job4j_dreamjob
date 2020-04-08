@@ -87,18 +87,9 @@
                             list</a>
                     </li>
                 </c:if>
-                <li class="nav-item">
-                    <a class="nav-link active"
-                       href="${pageContext.request.contextPath}/${sessionScope.user.role.role}/edit?id=${userDto.userId}">Edit
-                        profile</a>
-                </li>
 
                 <li class="nav-item">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" >Edit profile M</button>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Remove profile</a>
+                    <button type="button" class="btn btn-link nav-link" data-toggle="modal" data-target="#editModal" >Edit</button>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="${pageContext.request.contextPath}/signout">Sign out</a>

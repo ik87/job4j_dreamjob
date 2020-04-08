@@ -1,5 +1,6 @@
 package ru.job4j.webservice.controllers.admin;
 
+import com.google.gson.Gson;
 import ru.job4j.webservice.dto.UserDto;
 import ru.job4j.webservice.mapers.UserMapper;
 import ru.job4j.webservice.mapers.UserMapperImpl;
@@ -51,8 +52,15 @@ public class MainServlet extends HttpServlet {
 
         validate.update(user, changed);
 
+        user = validate.findById(user);
+
         try {
-            resp.sendRedirect(req.getContextPath() + "/");
+            UserDto userDto = userMapper.toDto(user);
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,23 +71,13 @@ public class MainServlet extends HttpServlet {
         user = validate.findById(user);
         user.setPhoto(null);
         validate.update(user);
-
-        try {
-            resp.sendRedirect(req.getContextPath() + "/");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     private void remove(HttpServletRequest req, HttpServletResponse resp) {
         User user = Utils.propertiesToUser(req);
         user = validate.findById(user);
-        validate.delete(user);
-
-        try {
-            resp.sendRedirect(req.getContextPath() + "/");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       // validate.delete(user);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

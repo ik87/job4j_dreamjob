@@ -1,6 +1,7 @@
 package ru.job4j.webservice.controllers.user;
 
 
+import com.google.gson.Gson;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import ru.job4j.webservice.dto.UserDto;
@@ -23,7 +24,7 @@ public class UploadServlet extends HttpServlet {
     private final UserMapper userMapper = UserMapperImpl.getInstance();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         List<FileItem> fileItems = null;
         try {
             fileItems = Utils.upload(req);
@@ -36,6 +37,8 @@ public class UploadServlet extends HttpServlet {
         authUser.setPhoto(bytes);
         validate.update(authUser);
         UserDto userDto = userMapper.toDto(authUser);
+        resp.setContentType("image/png");
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.getWriter().print(userDto.getPhoto());
     }
 
