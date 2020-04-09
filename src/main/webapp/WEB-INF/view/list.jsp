@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                 <c:forEach items="${usersDto}" var="userDto" varStatus="theCount">
-                    <tr id="${userDto.userId}" onclick="profile()" >
+                    <tr id="${userDto.userId}" onclick="profile(${userDto.userId})" >
                         <th scope="row">${theCount.index + 1}</th>
                         <td><img style="height: 50px" src="data:image/jpeg;base64,${userDto.photo}"/></td>
                         <td>${userDto.role}</td>

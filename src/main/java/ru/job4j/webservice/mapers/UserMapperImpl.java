@@ -48,7 +48,7 @@ public class UserMapperImpl implements UserMapper {
 
         return bytes != null
                 ? new String(Base64.getEncoder().encode(bytes), "UTF-8")
-                : null;
+                : "";
     }
 
     /**

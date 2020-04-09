@@ -1,5 +1,6 @@
 package ru.job4j.webservice.controllers.admin;
 
+import com.google.gson.Gson;
 import ru.job4j.webservice.dto.UserDto;
 import ru.job4j.webservice.mapers.UserMapper;
 import ru.job4j.webservice.mapers.UserMapperImpl;
@@ -29,7 +30,12 @@ public class ProfileServlet extends HttpServlet {
             user = validate.findById(user);
         }
         UserDto userDto = userMapper.toDto(user);
-        req.setAttribute("userDto", userDto);
-        req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+        String json = new Gson().toJson(userDto);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(json);
+
+        //req.setAttribute("userDto", userDto);
+        //req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
     }
 }

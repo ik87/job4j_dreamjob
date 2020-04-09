@@ -1,6 +1,7 @@
 package ru.job4j.webservice.controllers.admin;
 
 
+import com.google.gson.Gson;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import ru.job4j.webservice.dto.UserDto;
@@ -39,10 +40,12 @@ public class UploadServlet extends HttpServlet {
             user = validate.findById(user);
             user.setPhoto(bytes);
             validate.update(user);
+
             UserDto userDto = userMapper.toDto(user);
-            resp.setContentType("image/png");
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().print(userDto.getPhoto());
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.getWriter().write(json);
         }
     }
 

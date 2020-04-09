@@ -1,13 +1,44 @@
 <!--modale profile-->
 <script>
-    function profile() {
-        console.log("clicks")
+    let URL_UPLOAD_IMG = "admin/upload";
+    let URL_DELETE_IMG = "admin";
+    let URL_GET_USER = "admin/profile?id=";
+
+    //appear function
+    function profile(id) {
+
+        //default setting
+        $.get(URL_GET_USER + id, putDataToProfile);
+
+        $('#profile').show();
+        $('#edit').hide();
+        $('#btn_profile').addClass("active");
+        $('#btn_edit').removeClass("active");
+
         $('#profileModal').modal('show');
+
+        $('#btn_profile').click(function () {
+            $(this).addClass("active");
+            $('#btn_edit').removeClass("active");
+            $('#profile').show("slow");
+            $('#edit').hide("slow");
+            $.get(URL_GET_USER + id, putDataToProfile);
+        });
+
+        $('#btn_edit').click(function () {
+            $(this).addClass("active");
+            $('#btn_profile').removeClass("active");
+            $('#profile').hide("slow");
+            $('#edit').show("slow");
+            $.get(URL_GET_USER + id, putDataToEdit);
+        });
     }
 
+
 </script>
-<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Profile</h5>
@@ -16,64 +47,25 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="e_login">Login</label>
-                            <input type="text" class="form-control" id="e_login" name="login" required>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <label for="e_email">Email</label>
-                            <input type="email" class="form-control" id="e_email" value="" name="email" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
+                <!--navigation-->
+                <div class="col-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-link nav-link" id="btn_profile">Profile</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-link nav-link" id="btn_edit">Edit</button>
+                        </li>
+                    </ul>
 
-                        <c:if test="${user.id  ne  userDto.userId}">
-                            <div class="form-group col-md-4">
-                                <label for="e_roleId">Role</label>
-                                <select name="role_id" id="e_roleId" class="form-control">
-                                    <option value="2" selected>User</option>
-                                    <option value="1">Admin</option>
-                                </select>
-                            </div>
-                        </c:if>
-                        <div class="form-group col-12">
-                            <label>Password</label>
-                            <div class="form-group">
-                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                        data-target="#collapsePass" aria-expanded="false" aria-controls="collapsePass">
-                                    Change
-                                    password
-                                </button>
-                            </div>
-                            <!--password collapse-->
-                            <div class="collapse col-12" id="collapsePass">
-                                <div class="card card-body">
-                                    <label for="passA">New password</label>
-                                    <input type="password" class="form-control" id="passA" required>
-                                    <div id="displayPassB" class="d-none">
-                                        <label for="passB">Repeat new password</label>
-                                        <input type="password" class="form-control" id="passB" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group  col-md-12">
-                            <label for="e_country">Country</label>
-                            <input type="text" class="form-control" id="e_country" value="" required>
-                            <label for="e_city">City</label>
-                            <input type="text" class="form-control" id="e_city" value="" required>
-                        </div>
-                        <input type="hidden" name="action" value="update">
-                        <input type="hidden" name="id" value="">
-                    </div>
-                </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="save" data-dismiss="modal">Save</button>
+                </div>
+                <!--profile block-->
+                <div id="profile">
+                    <%@include file="info.jsp" %>
+                </div>
+                <!--edit block-->
+                <div id="edit">
+                    <%@include file="edit.jsp" %>
                 </div>
             </div>
         </div>
