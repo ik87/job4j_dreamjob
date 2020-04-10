@@ -15,24 +15,33 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script>
-    function remove(id) {
-        $.ajax({
-            type: 'POST',
-            url: "admin",
-            data: {id: id, action: "remove"},
-            dataType: 'text'
-        }).done(function (data) {
-               $("#"+id).remove();
-        });
-    }
-</script>
+    <script>
+        let URL_UPLOAD_IMG = "admin/upload";
+        let URL_POST = "admin";
+        let URL_GET_USER = "admin/profile?id=";
+
+        function remove(id) {
+            $.ajax({
+                type: 'POST',
+                url: "admin",
+                data: {id: id, action: "remove"},
+                dataType: 'text'
+            }).done(function (data) {
+                $("#" + id).remove();
+            });
+        }
+
+
+
+    </script>
+
+
 </head>
 <body>
 <div class="container">
     <div class="row-cols-1">
 
-<%--navigation menu--%>
+        <%--navigation menu--%>
         <div class="col">
             <ul class="nav">
                 <li class="nav-item">
@@ -48,7 +57,7 @@
             </ul>
         </div>
 
-<%--table users--%>
+        <%--table users--%>
         <div class="col mt-4">
             <table class="table table-hover">
                 <thead>
@@ -63,20 +72,14 @@
                 </thead>
                 <tbody>
                 <c:forEach items="${usersDto}" var="userDto" varStatus="theCount">
-                    <tr id="${userDto.userId}" onclick="profile(${userDto.userId})" >
+                    <tr id="${userDto.userId}" data-toggle="modal" data-target="#profileModal">
                         <th scope="row">${theCount.index + 1}</th>
-                        <td><img style="height: 50px" src="data:image/jpeg;base64,${userDto.photo}"/></td>
+                        <td><img style="height: 50px" src="data:image/jpeg;base64,${userDto.photo}"
+                                 onerror="this.src='js//default-user-img.jpg'"/></td>
                         <td>${userDto.role}</td>
                         <td>${userDto.login}</td>
                         <td>${userDto.email}</td>
                         <td>
-<%--                            <a href="admin/profile?id=${userDto.userId}">[profile]</a>
-                            <a href="admin/edit?id=${userDto.userId}">[edit]</a>
-                            <form action="admin" method="post">
-                                <input type="hidden" name="id" value="${userDto.userId}" >
-                                <input type="hidden" name="action" value="remove">
-                                <input type="submit" value="remove">
-                            </form>--%>
                             <button class="btn btn-link" onclick="remove(${userDto.userId})">remove</button>
                         </td>
                     </tr>

@@ -115,7 +115,6 @@
                 $("#role").html(data.role);
                 $("#country").html(data.country);
                 $("#city").html(data.city);
-                console.log(data);
 
             }).fail(function (err) {
 /*                $('body').prepend(

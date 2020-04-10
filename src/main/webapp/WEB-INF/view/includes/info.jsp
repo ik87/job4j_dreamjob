@@ -7,7 +7,6 @@
         $("#country").html(data.country);
         $("#city").html(data.city);
         $("#img").attr('src', 'data:image/jpeg;base64,' + data.photo);
-
     }
 </script>
 
@@ -18,10 +17,8 @@
     <div class="col-12 col-lg-4 mt-3">
         <!--row 2-->
         <!--img-->
-        <img class="rounded mx-auto d-block" id="img" style="width: 100%"
-             src=""
-             onerror="this.onerror=null; this.src='js/default-user-img.jpg'"
-        />
+        <img class="rounded mx-auto d-block" id="img"
+             style="width: 100%" onerror="this.src='js//default-user-img.jpg'"/>
 
     </div>
 

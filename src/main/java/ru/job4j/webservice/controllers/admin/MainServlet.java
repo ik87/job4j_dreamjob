@@ -49,21 +49,9 @@ public class MainServlet extends HttpServlet {
     private void update(HttpServletRequest req, HttpServletResponse resp) {
         User changed = Utils.propertiesToUser(req);
         User user = validate.findById(changed);
-
         validate.update(user, changed);
-
-        user = validate.findById(user);
-
-        try {
-            UserDto userDto = userMapper.toDto(user);
-            String json = new Gson().toJson(userDto);
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     private void deleteImg(HttpServletRequest req, HttpServletResponse resp) {

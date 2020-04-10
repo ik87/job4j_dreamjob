@@ -29,13 +29,19 @@ public class ProfileServlet extends HttpServlet {
             user.setId(Integer.valueOf(id));
             user = validate.findById(user);
         }
-        UserDto userDto = userMapper.toDto(user);
-        String json = new Gson().toJson(userDto);
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(json);
 
-        //req.setAttribute("userDto", userDto);
-        //req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+        boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+        UserDto userDto = userMapper.toDto(user);
+
+        if(ajax) {
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.getWriter().write(json);
+        } else {
+            req.setAttribute("userDto", userDto);
+            req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+        }
+
     }
 }

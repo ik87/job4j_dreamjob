@@ -1,39 +1,57 @@
 <!--modale profile-->
 <script>
-    let URL_UPLOAD_IMG = "admin/upload";
-    let URL_DELETE_IMG = "admin";
-    let URL_GET_USER = "admin/profile?id=";
 
+    var current_id;
     //appear function
-    function profile(id) {
 
-        //default setting
-        $.get(URL_GET_USER + id, putDataToProfile);
+    $(function (){
 
-        $('#profile').show();
-        $('#edit').hide();
-        $('#btn_profile').addClass("active");
-        $('#btn_edit').removeClass("active");
+        $('#profileModal').on('show.bs.modal', function (event) {
+            var tr = $(event.relatedTarget);
+            current_id = tr.attr("id");
 
-        $('#profileModal').modal('show');
+            //default setting
+            $.get(URL_GET_USER + current_id, putDataToProfile);
 
-        $('#btn_profile').click(function () {
+            $('#profile').show();
+            $('#edit').hide();
+
+            $('#btn_profile').removeClass("active");
+            $('#btn_edit').removeClass("active");
+
+            $('#btn_profile').addClass("active");
+
+        });
+
+        //when close modal then update item in list
+        $('#profileModal').on('hidden.bs.modal', function (event) {
+            $.get(URL_GET_USER + current_id, function (data) {
+                var tr = $("#" + current_id);
+                tr.find("td:eq(0)").find("img").attr('src', 'data:image/jpeg;base64,' + data.photo);
+                tr.find("td:eq(1)").html(data.role);
+                tr.find("td:eq(2)").html(data.login);
+                tr.find("td:eq(3)").html(data.email);
+            });
+            clearEditForm();
+        });
+
+        $('#btn_profile').on("click",function () {
             $(this).addClass("active");
             $('#btn_edit').removeClass("active");
             $('#profile').show("slow");
             $('#edit').hide("slow");
-            $.get(URL_GET_USER + id, putDataToProfile);
+            $.get(URL_GET_USER + current_id, putDataToProfile);
         });
 
-        $('#btn_edit').click(function () {
+        $('#btn_edit').on("click",function () {
             $(this).addClass("active");
             $('#btn_profile').removeClass("active");
             $('#profile').hide("slow");
             $('#edit').show("slow");
-            $.get(URL_GET_USER + id, putDataToEdit);
+            $.get(URL_GET_USER + current_id, putDataToEdit);
         });
-    }
 
+    });
 
 </script>
 <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
