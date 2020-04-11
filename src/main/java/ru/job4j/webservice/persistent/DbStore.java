@@ -41,10 +41,11 @@ public class DbStore implements Store {
     }
 
     @Override
-    public void add(User user) {
+    public User add(User user) {
+        User result = null;
         String sql = "INSERT INTO Users(role_id, login, email, password, created, country, city) VALUES (?, ?, ?, ?, NOW(), ?, ?)";
         try (Connection connection = SOURCE.getConnection();
-             PreparedStatement pstm = connection.prepareStatement(sql)) {
+             PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstm.setInt(1, user.getRole().getId());
             pstm.setString(2, user.getLogin());
             pstm.setString(3, user.getEmail());
@@ -52,14 +53,22 @@ public class DbStore implements Store {
             pstm.setString(5, user.getCountry());
             pstm.setString(6, user.getCity());
             pstm.executeUpdate();
+            try (ResultSet generatedKeys = pstm.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    user.setId(generatedKeys.getInt(1));
+                }
+            }
+            result = user;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return result;
     }
 
 
     @Override
-    public void update(User user) {
+    public boolean update(User user) {
+        boolean result = true;
         String sql = "UPDATE users SET role_id = ?, "
                 + "login = ?, email = ?, password = ?, photo = ?, country = ?, city = ? WHERE user_id = ?";
         try (Connection connection = SOURCE.getConnection();
@@ -76,7 +85,9 @@ public class DbStore implements Store {
             pstm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            result = false;
         }
+        return result;
     }
 
     @Override

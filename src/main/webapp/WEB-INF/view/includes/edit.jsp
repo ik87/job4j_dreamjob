@@ -1,31 +1,13 @@
 <script>
-    //put data
-    function putDataToEdit(data) {
-        clearEditForm();
-        $("#e_login").val(data.login);
-        $("#e_email").val(data.email);
-        $("#e_role").val(data.role);
-        $("#e_country").val(data.country);
-        $("#e_city").val(data.city);
-        $("#e_img").attr('src', 'data:image/jpeg;base64,' + data.photo);
-        $("#e_id").val(data.userId);
-        $("#e_roleId").val(data.roleId);
-    }
 
     $(function () {
 
-        $("#uploadImg").on("click", function () {
-            uploadImg(URL_UPLOAD_IMG);
-        });
-
-        $("#deleteImg").on("click", function () {
-            deleteImg(URL_POST);
-        });
-
         <!-- click save -->
-        $('#save').on("click", function (event) {
-            var data = credential();
+        $('#change').on("click", function () {
+            var data = e_credential();
             if (data != null) {
+                data.action = "update";
+                console.log(data);
                 $.post(URL_POST, data).done(function () {
                     $("#danger").hide("slow");
                     $("#success").hide("fast").show("slow");
@@ -40,28 +22,22 @@
         });
 
         <!-- check password -->
-        $('#passA').on("keyup", function () {
-            if ($(this).val().length > 2) {
-                $(this).removeClass("is-invalid").addClass("is-valid");
-                $('#displayPassB').removeClass("d-none");
-            }
-            if ($(this).val().length < 2) {
-                $(this).removeClass("is-valid").addClass("is-invalid");
-                $('#passB').val('');
-                $('#displayPassB').addClass("d-none");
-            }
+        checkPass("e_passA", "e_passB", "e_displayPassB");
+
+        $("#uploadImg").on("click", function () {
+            uploadImg(URL_UPLOAD_IMG);
         });
 
-        $('#passB').on("keyup", function () {
-            if ($(this).val() == $('#passA').val()) {
-                $(this).removeClass("is-invalid").addClass("is-valid");
-            } else {
-                $(this).removeClass("is-valid").addClass("is-invalid");
-            }
+        $("#deleteImg").on("click", function () {
+            deleteImg(URL_POST);
         });
+
 
     });
 
+
+
+    <!-- upload and delete img-->
     function uploadImg(url) {
 
         var input = $('#inputGroupFile03')[0];
@@ -84,7 +60,6 @@
             });
         }
     }
-
     function deleteImg(url) {
         var id = $('#e_id').val();
 
@@ -94,21 +69,49 @@
             });
     }
 
-    <!-- credential block -->
+    <!-- put data to form -->
+    function putEditFormUser(data) {
+        $("#e_login").val(data.login);
+        $("#e_email").val(data.email);
+        $("#e_role").val(data.role);
+        $("#e_country").val(data.country);
+        $("#e_city").val(data.city);
+        $("#e_img").attr('src', 'data:image/jpeg;base64,' + data.photo);
+        $("#e_id").val(data.userId);
+        $("#e_roleId").val(data.roleId);
+    }
 
-    function credential() {
+    <!-- clear form -->
+    function clearEditFormUser() {
+        $("#e_login").val("").removeClass("is-valid");
+        $("#e_email").val("").removeClass("is-valid");
+        $("#e_role").val("").removeClass("is-valid");
+        $("#e_country").val("").removeClass("is-valid");
+        $("#e_city").val("").removeClass("is-valid");
+        $("#e_img").attr('src', "")
+        $("#e_id").val("");
+        $("#e_roleId").val("");
+
+        $('#e_passA').val('').removeClass("is-valid");
+        $('#e_passB').val('').removeClass("is-valid");
+
+        $('#e_displayPassB').addClass("d-none");
+        $('#collapsePass').collapse("hide");
+    }
+
+    <!-- credential block -->
+    function e_credential() {
         var data = {
             login: $('#e_login'),
             email: $('#e_email'),
             country: $('#e_country'),
             city: $('#e_city'),
-            roleId: $('#e_roleId').val(),
+            role_id: $('#e_roleId').val(),
             id: $("#e_id").val(),
-            action: "update"
         };
 
-        var passA = $('#passA');
-        var passB = $('#passB');
+        var passA = $('#e_passA');
+        var passB = $('#e_passB');
 
         var correct = true;
 
@@ -145,48 +148,12 @@
 
         return correct ? data : null;
     }
-
-    function checkEmail(email) {
-        var re = /\S+@\S+\.\S+/;
-        return !re.test(email.val());
-    }
-
-    function check(field, check) {
-        var correct = true;
-        if (check(field)) {
-            correct = false;
-            field.removeClass("is-valid").addClass("is-invalid");
-        } else {
-            field.removeClass("is-invalid").addClass("is-valid");
-        }
-        return correct;
-    }
-
-    function checkLength(el) {
-        return el.val().length < 3;
-    }
-
-    function clearEditForm() {
-        $("#e_login").val("").removeClass("is-valid");
-        $("#e_email").val("").removeClass("is-valid");
-        $("#e_role").val("").removeClass("is-valid");
-        $("#e_country").val("").removeClass("is-valid");
-        $("#e_city").val("").removeClass("is-valid");
-        $("#e_img").attr('src', "")
-        $("#e_id").val("");
-        $("#e_roleId").val("");
-
-        $('#passA').val('').removeClass("is-valid");
-        $('#passB').val('').removeClass("is-valid");
-
-        $('#displayPassB').addClass("d-none");
-        $('#collapsePass').collapse("hide");
-
+    function clearEdit() {
         $("#success").hide();
         $("#danger").hide();
     }
-
 </script>
+
 <div class="container-sm">
     <!--row 1-->
     <div class="row  m-3">
@@ -223,7 +190,7 @@
 
         </div>
 
-        <!--profile edit-->
+        <!--profile form-->
         <div class="col-12 col-lg-8">
             <form>
                 <div class="form-row">
@@ -257,11 +224,11 @@
                         <!--password collapse-->
                         <div class="collapse col-12" id="collapsePass">
                             <div class="card card-body">
-                                <label for="passA">New password</label>
-                                <input type="password" class="form-control" id="passA" required>
-                                <div id="displayPassB" class="d-none">
-                                    <label for="passB">Repeat new password</label>
-                                    <input type="password" class="form-control" id="passB" required>
+                                <label for="e_passA">New password</label>
+                                <input type="password" class="form-control" id="e_passA" required>
+                                <div id="e_displayPassB" class="d-none">
+                                    <label for="e_passB">Repeat new password</label>
+                                    <input type="password" class="form-control" id="e_passB" required>
                                 </div>
                             </div>
                         </div>
@@ -273,14 +240,13 @@
                         <label for="e_city">City</label>
                         <input type="text" class="form-control" id="e_city" value="" required>
                     </div>
-                    <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="id" value="">
                 </div>
             </form>
 
         </div>
     </div>
 
+<!--button update profile-->
     <div class="modal-footer">
         <div id="success" class="alert alert-success" role="alert">
             Change was saved!
@@ -290,7 +256,7 @@
         </div>
         <div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="save">Save</button>
+            <button type="button" class="btn btn-primary" id="change">Change</button>
         </div>
     </div>
 

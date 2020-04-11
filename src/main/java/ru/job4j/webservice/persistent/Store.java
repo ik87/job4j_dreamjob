@@ -6,9 +6,9 @@ import ru.job4j.webservice.models.User;
 import java.util.List;
 
 public interface Store {
-    void add(User user);
+    User add(User user);
 
-    void update(User user);
+    boolean update(User user);
 
     void delete(User user);
 

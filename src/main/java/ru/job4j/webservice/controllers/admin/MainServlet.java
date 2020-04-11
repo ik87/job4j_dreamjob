@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +28,7 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        actions.put("add", this::add);
         actions.put("update", this::update);
         actions.put("remove", this::remove);
         actions.put("deleteImg", this::deleteImg);
@@ -49,9 +51,13 @@ public class MainServlet extends HttpServlet {
     private void update(HttpServletRequest req, HttpServletResponse resp) {
         User changed = Utils.propertiesToUser(req);
         User user = validate.findById(changed);
-        validate.update(user, changed);
+        boolean result = validate.update(user, changed);
         resp.setCharacterEncoding("UTF-8");
-        resp.setStatus(HttpServletResponse.SC_OK);
+        if (result) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
     }
 
     private void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
@@ -65,7 +71,27 @@ public class MainServlet extends HttpServlet {
     private void remove(HttpServletRequest req, HttpServletResponse resp) {
         User user = Utils.propertiesToUser(req);
         user = validate.findById(user);
-       // validate.delete(user);
+        // validate.delete(user);
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private void add(HttpServletRequest req, HttpServletResponse resp) {
+        User user = Utils.propertiesToUser(req);
+        user = validate.add(user);
+        resp.setCharacterEncoding("UTF-8");
+        if (user != null) {
+            try {
+                user = validate.findById(user);
+                UserDto userDto = userMapper.toDto(user);
+                String json = new Gson().toJson(userDto);
+                resp.setContentType("application/json");
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write(json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
     }
 }

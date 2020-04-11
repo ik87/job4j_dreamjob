@@ -32,7 +32,6 @@
                 tr.find("td:eq(2)").html(data.login);
                 tr.find("td:eq(3)").html(data.email);
             });
-            clearEditForm();
         });
 
         $('#btn_profile').on("click",function () {
@@ -44,11 +43,13 @@
         });
 
         $('#btn_edit').on("click",function () {
+            clearEditFormUser();
+            clearEdit();
             $(this).addClass("active");
             $('#btn_profile').removeClass("active");
             $('#profile').hide("slow");
             $('#edit').show("slow");
-            $.get(URL_GET_USER + current_id, putDataToEdit);
+            $.get(URL_GET_USER + current_id, putEditFormUser);
         });
 
     });
