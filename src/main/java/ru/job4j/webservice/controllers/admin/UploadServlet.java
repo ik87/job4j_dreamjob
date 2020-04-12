@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UploadServlet extends HttpServlet {
     private final Validate validate = ValidateService.getInstance();
@@ -40,11 +42,19 @@ public class UploadServlet extends HttpServlet {
             user = validate.findById(user);
             user.setPhoto(bytes);
             validate.update(user);
+            //id and photo
 
             UserDto userDto = userMapper.toDto(user);
-            String json = new Gson().toJson(userDto);
+
+            Map<String, String> options = new LinkedHashMap<>();
+            options.put("id", String.valueOf(userDto.getUserId()));
+            options.put("photo", userDto.getPhoto());
+            String json = new Gson().toJson(options);
+
             resp.setContentType("application/json");
+
             resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.getWriter().write(json);
         }
     }

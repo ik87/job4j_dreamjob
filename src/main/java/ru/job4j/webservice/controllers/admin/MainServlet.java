@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,10 +35,41 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<User> users = validate.findAll();
-        List<UserDto> usersDto = userMapper.toDto(users);
-        req.setAttribute("usersDto", usersDto);
-        req.getRequestDispatcher("/WEB-INF/view/list.jsp").forward(req, resp);
+
+        //if  !XMLHttpRequst -> open list.jsp and put all users to attribute
+        //if  XMLHttpRequst -> (json) session user
+        //if  XMLHttpRequst & id -> (json) user by id
+
+        boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+
+        if (ajax) {
+            String id = req.getParameter("id");
+            User user = new User();
+
+            if (id == null) {
+                user = Utils.getObjectFromSession(req, "user");
+            } else {
+                user.setId(Integer.valueOf(id));
+                user = validate.findById(user);
+            }
+
+            if (user == null) {
+                resp.setCharacterEncoding("UTF-8");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            } else {
+                UserDto userDto = userMapper.toDto(user);
+                String json = new Gson().toJson(userDto);
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write(json);
+            }
+        } else {
+            List<User> users = validate.findAll();
+            List<UserDto> usersDto = userMapper.toDto(users);
+            req.setAttribute("usersDto", usersDto);
+            req.getRequestDispatcher("/WEB-INF/view/list.jsp").forward(req, resp);
+        }
     }
 
     @Override
@@ -48,19 +78,22 @@ public class MainServlet extends HttpServlet {
         actions.get(action).accept(req, resp);
     }
 
-    private void update(HttpServletRequest req, HttpServletResponse resp) {
+    void update(HttpServletRequest req, HttpServletResponse resp) {
         User changed = Utils.propertiesToUser(req);
         User user = validate.findById(changed);
         boolean result = validate.update(user, changed);
         resp.setCharacterEncoding("UTF-8");
         if (result) {
+            String id = "?id=" + user.getId().toString();
+            String url = req.getRequestURI() + id;
             resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setHeader("Location", url);
         } else {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
     }
 
-    private void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
+    void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
         User user = Utils.propertiesToUser(req);
         user = validate.findById(user);
         user.setPhoto(null);
@@ -68,28 +101,27 @@ public class MainServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
-    private void remove(HttpServletRequest req, HttpServletResponse resp) {
+    void remove(HttpServletRequest req, HttpServletResponse resp) {
         User user = Utils.propertiesToUser(req);
         user = validate.findById(user);
-        // validate.delete(user);
-        resp.setStatus(HttpServletResponse.SC_OK);
+        boolean result = validate.delete(user);
+        if(result) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
     }
 
-    private void add(HttpServletRequest req, HttpServletResponse resp) {
+    void add(HttpServletRequest req, HttpServletResponse resp) {
         User user = Utils.propertiesToUser(req);
         user = validate.add(user);
         resp.setCharacterEncoding("UTF-8");
         if (user != null) {
-            try {
-                user = validate.findById(user);
-                UserDto userDto = userMapper.toDto(user);
-                String json = new Gson().toJson(userDto);
-                resp.setContentType("application/json");
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().write(json);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String id = "?id=" + user.getId().toString();
+            String url = req.getRequestURI() + id;
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            resp.setHeader("Location", url);
         } else {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }

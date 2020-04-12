@@ -4,13 +4,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Users list</title>
     <!-- js -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="js/credential.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/city.js"></script>
+    <script type="text/javascript" src="js/city.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -19,12 +20,25 @@
     <script>
         let URL_UPLOAD_IMG = "admin/upload";
         let URL_POST = "admin";
-        let URL_GET_USER = "admin/profile?id=";
+        let URL_GET_USER_ID = "admin?id=";
+        let URL_GET_USER = "admin";
+
+        $(function () {
+            $('tbody tr td:not(:last-child)').on('click',function () {
+                var tr = $(this).closest('tr');
+                modalProfileShows(tr.attr('id'));
+            });
+
+            $('tbody tr td:last-child button').on('click', function () {
+                var tr = $(this).closest('tr');
+                remove(tr.attr('id'));
+            });
+        });
 
         function remove(id) {
             $.ajax({
                 type: 'POST',
-                url: "URL_POST",
+                url: URL_POST,
                 data: {id: id, action: "remove"},
                 dataType: 'text'
             }).done(function (data) {
@@ -52,7 +66,7 @@
                 </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-link nav-link"
-                            id="${sessionScope.user.id}" data-toggle="modal"
+                            data-toggle="modal"
                             data-target="#profileModal">Profile
                     </button>
                 </li>
@@ -71,20 +85,21 @@
                     <th scope="col">Role</th>
                     <th scope="col">Login</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Operations</th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <c:forEach items="${usersDto}" var="userDto">
                     <c:if test="${userDto.userId != sessionScope.user.id}">
-                        <tr id="${userDto.userId}" data-toggle="modal" data-target="#profileModal">
-                            <td><img style="height: 50px" src="data:image/jpeg;base64,${userDto.photo}"
+                        <tr id="${userDto.userId}">
+                            <td ><img style="height: 50px" src="data:image/jpeg;base64,${userDto.photo}"
                                      onerror="this.src='js//default-user-img.jpg'"/></td>
                             <td>${userDto.role}</td>
                             <td>${userDto.login}</td>
                             <td>${userDto.email}</td>
                             <td>
-                                <button class="btn btn-link" onclick="remove(${userDto.userId})">remove</button>
+                                <button class="btn btn-link" >remove</button>
                             </td>
                         </tr>
                     </c:if>

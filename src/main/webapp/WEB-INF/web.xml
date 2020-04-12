@@ -75,22 +75,6 @@
         <servlet-name>AdminEntryPoint</servlet-name>
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>AdminProfile</servlet-name>
-        <servlet-class>ru.job4j.webservice.controllers.admin.ProfileServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminProfile</servlet-name>
-        <url-pattern>/admin/profile</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>AdminProfileEdit</servlet-name>
-        <servlet-class>ru.job4j.webservice.controllers.admin.EditServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminProfileEdit</servlet-name>
-        <url-pattern>/admin/edit</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>UploadAdmin</servlet-name>

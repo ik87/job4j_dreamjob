@@ -11,7 +11,7 @@
                 $.post(URL_POST, data).done(function () {
                     $("#danger").hide("slow");
                     $("#success").hide("fast").show("slow");
-                }).error(function () {
+                }).error(function (data) {
                     $("#success").hide("slow");
                     $("#danger").hide("slow").show("slow");
                 });
@@ -55,6 +55,7 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
+                    console.log(data);
                     $("#e_img").attr('src', 'data:image/jpeg;base64,' + data.photo);
                 }
             });

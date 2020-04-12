@@ -1,29 +1,46 @@
 <!--module add-->
 <script>
-    $(function (){
+    $(function () {
 
         $('#addModal').on('show.bs.modal', function (event) {
             clearAddFormUser();
+
             $("#add_success").hide();
             $("#add_failure").hide();
         });
 
-          <!-- click Add -->
+        <!-- click Add -->
         $('#add').on("click", addUser);
         <!-- check password -->
         checkPass("a_passA", "a_passB", "a_displayPassB");
 
-});
+        $('#generate').on("click", function () {
+            var smth = gen(3);
+            $("#a_login").val(smth);
+            $("#a_email").val(smth + '@gmail.com');
+
+            $("#a_country").val('Russia');
+            $("#a_city").val('Moscow');
+
+            $('#a_passA').val(123);
+
+            $('#a_passB').val(123);
+
+            $('#a_displayPassB').removeClass("d-none");
+        });
+
+    });
 
     function addUser() {
         var data = a_credential();
         if (data != null) {
             data.action = "add";
-            $.post(URL_POST, data).done(function (json) {
+            $.post(URL_POST, data).done(function (data, status, xhr) {
                 $("#add_failure").hide("slow");
                 $("#add_success").hide("fast").show("slow");
-                console.log(json);
-                addToTable(json);
+                var url = xhr.getResponseHeader('Location');
+                addRow(url);
+                $("#addModal").modal('hide');
             }).error(function () {
                 $("#add_success").hide("slow");
                 $("#add_failure").hide("fast").show("slow");
@@ -82,15 +99,24 @@
         return correct ? data : null;
     }
 
+    function gen(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
     <!-- clear form -->
     function clearAddFormUser() {
         $("#a_login").val("").removeClass("is-valid");
         $("#a_email").val("").removeClass("is-valid");
-        $("#a_role").val("").removeClass("is-valid");
+
         $("#a_country").val("").removeClass("is-valid");
         $("#a_city").val("").removeClass("is-valid");
         $("#a_id").val("");
-        $("#a_roleId").val("");
 
         $('#a_passA').val('').removeClass("is-valid");
         $('#a_passB').val('').removeClass("is-valid");
@@ -98,22 +124,25 @@
         $('#a_displayPassB').addClass("d-none");
     }
 
-    function addToTable(json) {
-        $('table tbody tr:last').after(
-            '<tr data-toggle="modal" data-target="#profileModal">' +
-            '<td><img style="height: 50px" src="data:image/jpeg;base64,"' + json.photo +
-            `onerror="this.src='js//default-user-img.jpg'"/></td>` +
-            '<td>' + json.role + '</td>' +
-            '<td>' + json.login + '</td>' +
-            '<td>' + json.email + '</td>' +
-             '<td>' +
-             '<button class="btn btn-link" >remove</button>' +
-             '</td>' +
-             '</tr>'
-        );
-        $('table tbody tr:last').attr('id', json.userId);
-        $('table tbody tr:last td:last').on('click', function() {
-            remove(json.userId);
+    function addRow(url) {
+        $.get(url, function (json) {
+            $('table tbody tr:last').after(
+                '<tr id=' + json.userId + '>' +
+                '<td><img style="height: 50px" src="data:image/jpeg;base64,"' + json.photo +
+                `onerror="this.src='js//default-user-img.jpg'"/></td>` +
+                '<td>' + json.role + '</td>' +
+                '<td>' + json.login + '</td>' +
+                '<td>' + json.email + '</td>' +
+                '<td>' +
+                '<button class="btn btn-link" >remove</button>' +
+                '</td>' +
+                '</tr>'
+            );
+
+            $('table tbody tr:last td:last-child button').on('click', function () {
+                var tr = $(this).closest('tr');
+                remove(tr.attr('id'));
+            });
         });
     }
 </script>
@@ -145,19 +174,19 @@
                             <div class="form-group col-md-4">
                                 <label for="a_roleId">Role</label>
                                 <select name="role_id" id="a_roleId" class="form-control">
-                                    <option value="2">User</option>
+                                    <option selected value="2">User</option>
                                     <option value="1">Admin</option>
                                 </select>
                             </div>
                             <div class="form-group col-12">
                                 <!--password -->
-                                <label >Password</label>
+                                <label>Password</label>
                                 <input type="password" class="form-control" id="a_passA" required>
                                 <div id="a_displayPassB" class="d-none">
                                     <label for="a_passB">Repeat password</label>
                                     <input type="password" class="form-control" id="a_passB" required>
                                 </div>
-                             </div>
+                            </div>
 
                             <div class="form-group  col-md-12">
                                 <label for="a_country">Country</label>
@@ -177,7 +206,8 @@
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="add" data-dismiss="modal">Add</button>
+                            <button type="button" class="btn btn-primary" id="add" >Add</button>
+                            <button type="button" class="btn btn-warning" id="generate">generate</button>
                         </div>
                     </div>
 
