@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+<!--    <script type='text/javascript'>
+        function GetMap() {
+            Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', {
+                callback: function () {
+                    var manager = new Microsoft.Maps.AutosuggestManager({
+                        addressSuggestions: false
+                    });
+                    manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
+                },
+                errorCallback: function(msg){
+                    alert(msg);
+                },
+                credentials: 'An6AlZc46d8KyJUq4zRmNenT57F65DEhLpkF6OAg7PN740Qq-iGjbffqfojP7Lxu'
+            });
+        }
+
+        function selectedSuggestion(result) {
+            //Populate the address textbox values.
+            document.getElementById('cityTbx').value = result.address.locality || '';
+            document.getElementById('countryTbx').value = result.address.countryRegion || '';
+        }
+    </script>-->
+    <style>
+        #searchBox {
+            width: 400px;
+        }
+
+        .addressForm {
+            margin-top:10px;
+            background-color: #008272;
+            color: #fff;
+            border-radius:10px;
+            padding: 10px;
+        }
+
+        .addressForm input{
+            width:265px;
+        }
+    </style>
+<!--
+    <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+-->
+
+    <script type="text/javascript" src="js/bing_map.js"></script>
+    <script>
+        entityBingMap.searchBoxContainer = "#searchBoxContainer";
+        entityBingMap.searchBox = "#searchBox";
+        entityBingMap.countryTbx = 'countryTbx';
+        entityBingMap.cityTbx = 'cityTbx';
+    </script>
+</head>
+<body>
+<div id='searchBoxContainer'>
+    <input type='text' id='searchBox'/>
+</div>
+
+<table class="addressForm">
+    <tr><td>City:</td><td><input type="text" id="cityTbx"/></td></tr>
+    <tr><td>Country:</td><td><input type="text" id="countryTbx"/></td></tr>
+</table>
+</body>
+</html>

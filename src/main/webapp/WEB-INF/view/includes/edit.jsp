@@ -71,7 +71,7 @@
     }
 
     <!-- put data to form -->
-    function putEditFormUser(data) {
+    function loadEditForm(data) {
         $("#e_login").val(data.login);
         $("#e_email").val(data.email);
         $("#e_role").val(data.role);
@@ -83,7 +83,7 @@
     }
 
     <!-- clear form -->
-    function clearEditFormUser() {
+    function clearEditForm() {
         $("#e_login").val("").removeClass("is-valid");
         $("#e_email").val("").removeClass("is-valid");
         $("#e_role").val("").removeClass("is-valid");
@@ -98,6 +98,11 @@
 
         $('#e_displayPassB').addClass("d-none");
         $('#collapsePass').collapse("hide");
+
+        entityBingMap.searchBoxContainer = '';
+        entityBingMap.searchBox = '';
+        entityBingMap.countryTbx = '';
+        entityBingMap.cityTbx = '';
     }
 
     <!-- credential block -->
@@ -153,6 +158,8 @@
         $("#success").hide();
         $("#danger").hide();
     }
+
+
 </script>
 
 <div class="container-sm">
@@ -236,10 +243,14 @@
                     </div>
 
                     <div class="form-group  col-md-12">
+                        <label for="e_searchBox">Enter your city</label>
+                        <div id='e_searchBoxContainer'>
+                            <input type='text' id='e_searchBox'/>
+                        </div>
                         <label for="e_country">Country</label>
-                        <input type="text" class="form-control" id="e_country" value="" required>
+                        <input type="text" class="form-control" id="e_country" value="" required disabled>
                         <label for="e_city">City</label>
-                        <input type="text" class="form-control" id="e_city" value="" required>
+                        <input type="text" class="form-control" id="e_city" value="" required disabled>
                     </div>
                 </div>
             </form>

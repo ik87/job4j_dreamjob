@@ -1,6 +1,6 @@
 <script>
     //put data
-    function putDataToProfile(data) {
+    function loadProfile(data) {
         $("#login").html(data.login);
         $("#email").html(data.email);
         $("#role").html(data.role);

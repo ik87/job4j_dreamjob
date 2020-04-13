@@ -5,21 +5,6 @@
     //appear function
 
     $(function (){
-        $('#profileModal').on('show.bs.modal', function (event) {
-            //default setting
-
-            user_url = URL_GET_USER;
-
-            $.get(user_url, putDataToProfile);
-
-            $('#profile').show();
-            $('#edit').hide();
-
-            $('#btn_profile').removeClass("active");
-            $('#btn_edit').removeClass("active");
-
-            $('#btn_profile').addClass("active");
-        });
         //when close modal then update item in list
         $('#profileModal').on('hidden.bs.modal', function (event) {
             $.get(user_url, function (data) {
@@ -37,28 +22,33 @@
             $('#btn_edit').removeClass("active");
             $('#profile').show("slow");
             $('#edit').hide("slow");
-            $.get(user_url, putDataToProfile);
+            $.get(user_url, loadProfile);
         });
 
         $('#btn_edit').on("click",function () {
-            clearEditFormUser();
+            clearEditForm();
             clearEdit();
             $(this).addClass("active");
             $('#btn_profile').removeClass("active");
             $('#profile').hide("slow");
             $('#edit').show("slow");
-            $.get(user_url, putEditFormUser);
+            $.get(user_url, loadEditForm);
         });
 
     });
 
     function modalProfileShows(id) {
         $('#profileModal').modal("show");
-
-        user_url = URL_GET_USER_ID + id;
+        console.log(id);
+        if(id != undefined) {
+            user_url = URL_GET_USER_ID + id;
+        } else {
+            user_url = URL_GET_USER;
+        }
+        console.log(user_url);
 
         //default setting
-        $.get(user_url, putDataToProfile);
+        $.get(user_url, loadProfile);
 
         $('#profile').show();
         $('#edit').hide();

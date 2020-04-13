@@ -8,15 +8,15 @@
     <title>Users list</title>
     <!-- js -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="js/credential.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-    <script type="text/javascript" src="js/city.js"></script>
+    <script src="js/credential.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <script>
         let URL_UPLOAD_IMG = "admin/upload";
         let URL_POST = "admin";
@@ -29,10 +29,16 @@
                 modalProfileShows(tr.attr('id'));
             });
 
+            $('#profile_btn').on('click', function () {
+                modalProfileShows(undefined);
+            });
+
             $('tbody tr td:last-child button').on('click', function () {
                 var tr = $(this).closest('tr');
                 remove(tr.attr('id'));
             });
+
+
         });
 
         function remove(id) {
@@ -65,9 +71,8 @@
                     </button>
                 </li>
                 <li class="nav-item">
-                    <button type="button" class="btn btn-link nav-link"
-                            data-toggle="modal"
-                            data-target="#profileModal">Profile
+                    <button id="profile_btn" type="button" class="btn btn-link nav-link">
+                        Profile
                     </button>
                 </li>
                 <li class="nav-item ">
@@ -121,6 +126,15 @@
         crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script type="text/javascript" src="js/bing_map.js"></script>
+<script>
+    entityBingMap.searchBoxContainer = "#e_searchBoxContainer";
+    entityBingMap.searchBox = "#e_searchBox";
+    entityBingMap.selectedSuggestion = function(result) {
+        $('#e_city').val(result.address.locality || '');
+        $('#e_country').val(result.address.countryRegion || '');
+    };
+</script>
 <script>
     //init for upload file
     bsCustomFileInput.init()
