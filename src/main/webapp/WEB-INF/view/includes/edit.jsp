@@ -7,7 +7,7 @@
             var data = e_credential();
             if (data != null) {
                 data.action = "update";
-                console.log(data);
+
                 $.post(URL_POST, data).done(function () {
                     $("#danger").hide("slow");
                     $("#success").hide("fast").show("slow");
@@ -37,9 +37,8 @@
 
 
 
-    <!-- upload and delete img-->
+    <!-- upload img-->
     function uploadImg(url) {
-
         var input = $('#inputGroupFile03')[0];
         var file = input.files[0];
         var id = $('#e_id').val();
@@ -55,7 +54,6 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    console.log(data);
                     $("#e_img").attr('src', 'data:image/jpeg;base64,' + data.photo);
                 }
             });
@@ -71,7 +69,7 @@
     }
 
     <!-- put data to form -->
-    function loadEditForm(data) {
+    function loadEdit(data) {
         $("#e_login").val(data.login);
         $("#e_email").val(data.email);
         $("#e_role").val(data.role);
@@ -80,10 +78,16 @@
         $("#e_img").attr('src', 'data:image/jpeg;base64,' + data.photo);
         $("#e_id").val(data.userId);
         $("#e_roleId").val(data.roleId);
+
+
+        $("#success").hide();
+        $("#danger").hide();
+
+        mapFormEntity("#e_searchBox", "#e_searchBoxContainer", 'e_city', 'e_country');
     }
 
     <!-- clear form -->
-    function clearEditForm() {
+    function clearEdit() {
         $("#e_login").val("").removeClass("is-valid");
         $("#e_email").val("").removeClass("is-valid");
         $("#e_role").val("").removeClass("is-valid");
@@ -99,10 +103,8 @@
         $('#e_displayPassB').addClass("d-none");
         $('#collapsePass').collapse("hide");
 
-        entityBingMap.searchBoxContainer = '';
-        entityBingMap.searchBox = '';
-        entityBingMap.countryTbx = '';
-        entityBingMap.cityTbx = '';
+        $('#e_searchBox').val('');
+
     }
 
     <!-- credential block -->
@@ -153,10 +155,6 @@
         data.city = data.city.val();
 
         return correct ? data : null;
-    }
-    function clearEdit() {
-        $("#success").hide();
-        $("#danger").hide();
     }
 
 
@@ -245,7 +243,7 @@
                     <div class="form-group  col-md-12">
                         <label for="e_searchBox">Enter your city</label>
                         <div id='e_searchBoxContainer'>
-                            <input type='text' id='e_searchBox'/>
+                            <input type='text' id='e_searchBox' />
                         </div>
                         <label for="e_country">Country</label>
                         <input type="text" class="form-control" id="e_country" value="" required disabled>

@@ -7,6 +7,8 @@
 
             $("#add_success").hide();
             $("#add_failure").hide();
+
+            mapFormEntity("#a_searchBox", "#a_searchBoxContainer", 'a_city', 'a_country');
         });
 
         <!-- click Add -->
@@ -40,8 +42,11 @@
                 $("#add_success").hide("fast").show("slow");
                 var url = xhr.getResponseHeader('Location');
                 addRow(url);
-                $("#addModal").modal('hide');
-            }).error(function () {
+                setTimeout(function() {
+                    $("#addModal").modal('hide');
+                }, 1000);
+
+            }).fail(function () {
                 $("#add_success").hide("slow");
                 $("#add_failure").hide("fast").show("slow");
             });
@@ -122,6 +127,7 @@
         $('#a_passB').val('').removeClass("is-valid");
 
         $('#a_displayPassB').addClass("d-none");
+        $('#a_searchBox').val('');
     }
 
     function addRow(url) {
@@ -142,6 +148,11 @@
             $('table tbody tr:last td:last-child button').on('click', function () {
                 var tr = $(this).closest('tr');
                 remove(tr.attr('id'));
+            });
+
+            $('table tbody tr:last td:not(:last-child)').on('click',function () {
+                var tr = $(this).closest('tr');
+                modalProfileShow(tr.attr('id'));
             });
         });
     }
@@ -189,10 +200,14 @@
                             </div>
 
                             <div class="form-group  col-md-12">
+                                <label for="a_searchBox">Enter your city</label>
+                                <div id='a_searchBoxContainer'>
+                                    <input type='text' id='a_searchBox'/>
+                                </div>
                                 <label for="a_country">Country</label>
-                                <input type="text" class="form-control" id="a_country" value="" required>
+                                <input type="text" class="form-control" id="a_country" value="" required disabled>
                                 <label for="a_city">City</label>
-                                <input type="text" class="form-control" id="a_city" value="" required>
+                                <input type="text" class="form-control" id="a_city" value="" required disabled>
                             </div>
                         </div>
                     </form>
@@ -206,7 +221,7 @@
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="add" >Add</button>
+                            <button type="button" class="btn btn-primary" id="add">Add</button>
                             <button type="button" class="btn btn-warning" id="generate">generate</button>
                         </div>
                     </div>

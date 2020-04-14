@@ -26,26 +26,21 @@
         });
 
         $('#btn_edit').on("click",function () {
-            clearEditForm();
+            clearEdit();
             clearEdit();
             $(this).addClass("active");
             $('#btn_profile').removeClass("active");
             $('#profile').hide("slow");
             $('#edit').show("slow");
-            $.get(user_url, loadEditForm);
+            $.get(user_url, loadEdit);
         });
 
     });
 
-    function modalProfileShows(id) {
+    function modalProfileShow(id) {
         $('#profileModal').modal("show");
-        console.log(id);
-        if(id != undefined) {
-            user_url = URL_GET_USER_ID + id;
-        } else {
-            user_url = URL_GET_USER;
-        }
-        console.log(user_url);
+
+        user_url = URL_GET_USER_ID + id;
 
         //default setting
         $.get(user_url, loadProfile);

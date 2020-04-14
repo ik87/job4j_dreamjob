@@ -1,6 +1,5 @@
 package ru.job4j.webservice.controllers.admin;
 
-
 import com.google.gson.Gson;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -26,7 +25,7 @@ public class UploadServlet extends HttpServlet {
     private final UserMapper userMapper = UserMapperImpl.getInstance();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         List<FileItem> fileItems = null;
         try {
             fileItems = Utils.upload(req);
@@ -46,10 +45,11 @@ public class UploadServlet extends HttpServlet {
 
             UserDto userDto = userMapper.toDto(user);
 
-            Map<String, String> options = new LinkedHashMap<>();
-            options.put("id", String.valueOf(userDto.getUserId()));
-            options.put("photo", userDto.getPhoto());
-            String json = new Gson().toJson(options);
+            Map<String, String> photo = new LinkedHashMap<>();
+
+            photo.put("id", String.valueOf(userDto.getUserId()));
+            photo.put("photo", userDto.getPhoto());
+            String json = new Gson().toJson(photo);
 
             resp.setContentType("application/json");
 

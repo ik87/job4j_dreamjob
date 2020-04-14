@@ -5,6 +5,7 @@
         $("#email").html(data.email);
         $("#role").html(data.role);
         $("#country").html(data.country);
+        $("#created").html(data.created);
         $("#city").html(data.city);
         $("#img").attr('src', 'data:image/jpeg;base64,' + data.photo);
     }

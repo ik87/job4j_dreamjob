@@ -32,7 +32,7 @@ public class MemoryStore implements Store {
     public synchronized User add(User user) {
         User result = null;
         User usr = findByLogin(user);
-        if(usr == null) {
+        if (usr == null) {
             users.computeIfAbsent(id.getAndIncrement(), k -> {
                 user.setId(k);
                 return user;
@@ -47,7 +47,7 @@ public class MemoryStore implements Store {
     public synchronized boolean update(User user) {
         boolean result = false;
         User usr = findByLogin(user);
-        if(usr != null) {
+        if (usr != null) {
             users.put(user.getId(), user);
             result = true;
         }

@@ -49,15 +49,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>UserProfileEdit</servlet-name>
-        <servlet-class>ru.job4j.webservice.controllers.user.EditServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserProfileEdit</servlet-name>
-        <url-pattern>/user/edit</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>UploadUser</servlet-name>
         <servlet-class>ru.job4j.webservice.controllers.user.UploadServlet</servlet-class>
     </servlet>
@@ -70,7 +61,7 @@
     <servlet>
         <servlet-name>AdminEntryPoint</servlet-name>
         <servlet-class>ru.job4j.webservice.controllers.admin.MainServlet</servlet-class>
-    </servlet>
+</servlet>
     <servlet-mapping>
         <servlet-name>AdminEntryPoint</servlet-name>
         <url-pattern>/admin</url-pattern>
@@ -85,10 +76,6 @@
         <url-pattern>/admin/upload</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>Signup</servlet-name>
-        <url-pattern>/admin/add</url-pattern>
-    </servlet-mapping>
 
     <!-- Common servlets -->
 
@@ -101,26 +88,15 @@
         <url-pattern>/signout</url-pattern>
     </servlet-mapping>
 
+
+    <!-- Tester servlet -->
     <servlet>
-        <servlet-name>Signup</servlet-name>
-        <servlet-class>ru.job4j.webservice.controllers.SignupServlet</servlet-class>
+        <servlet-name>Tester</servlet-name>
+        <servlet-class>ru.job4j.webservice.controllers.admin.MainServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Signup</servlet-name>
-        <url-pattern>/signup</url-pattern>
+        <servlet-name>Tester</servlet-name>
+        <url-pattern>/tester</url-pattern>
     </servlet-mapping>
-
-    <!-- Ajax Test -->
-
-    <servlet>
-        <servlet-name>GreetingServlet</servlet-name>
-        <servlet-class>ru.job4j.webservice.controllers.ajax_test.GreetingServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>GreetingServlet</servlet-name>
-        <url-pattern>/greet</url-pattern>
-    </servlet-mapping>
-
 
 </web-app>

@@ -23,9 +23,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         if (request.getRequestURI().contains("css/") || request.getRequestURI().contains("js/")) {
             chain.doFilter(req, resp);
-        } else if (request.getRequestURI().contains("/login")) {
-            chain.doFilter(req, resp);
-        } else if (request.getRequestURI().contains("/signup")) {
+        } else if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/tester")) {
             chain.doFilter(req, resp);
         } else {
             HttpSession session = request.getSession();

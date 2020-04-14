@@ -139,8 +139,8 @@ public class DbStore implements Store {
      * @return array items
      */
     private List<User> findBy(String where, ConsumerX<PreparedStatement> ps) {
-        String sql = "SELECT user_id, u.role_id, role, login, email, password, created, photo, u.city, u.country" +
-                " FROM users u JOIN roles r ON r.role_id = u.role_id " + where;
+        String sql = "SELECT user_id, u.role_id, role, login, email, password, created, photo, u.city, u.country"
+                + " FROM users u JOIN roles r ON r.role_id = u.role_id " + where;
         List<User> users = new ArrayList<>();
         try (Connection connection = SOURCE.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {

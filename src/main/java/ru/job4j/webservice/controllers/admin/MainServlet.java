@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
@@ -37,12 +36,58 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         //if  !XMLHttpRequst -> open list.jsp and put all users to attribute
-        //if  XMLHttpRequst -> (json) session user
+        //if  XMLHttpRequst -> list users (json) and session user
         //if  XMLHttpRequst & id -> (json) user by id
 
         boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
 
         if (ajax) {
+            String id = req.getParameter("id");
+            String json = "";
+            if (id == null) {
+                Map<String, Set<UserDto>> composUsers = new LinkedHashMap<>();
+                Set<User> users = new LinkedHashSet<>(validate.findAll());
+
+                User current = Utils.getObjectFromSession(req, "user");
+
+                if (current != null) {
+                    users.remove(current);
+                    Set<UserDto> currentDto = Set.of(userMapper.toDto(current));
+                    composUsers.put("sessionUser", currentDto);
+                }
+
+                Set<UserDto> usersDto = new LinkedHashSet<>(userMapper.toDto(users));
+                composUsers.put("all", usersDto);
+
+                json = new Gson().toJson(composUsers);
+
+            } else {
+                User user = new User();
+                user.setId(Integer.valueOf(id));
+                user = validate.findById(user);
+                if (user != null) {
+                    UserDto userDto = userMapper.toDto(user);
+                    json = new Gson().toJson(userDto);
+                }
+            }
+            if (!json.isEmpty()) {
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write(json);
+            } else {
+                resp.setCharacterEncoding("UTF-8");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        } else {
+            List<User> users = validate.findAll();
+            List<UserDto> usersDto = userMapper.toDto(users);
+            req.setAttribute("usersDto", usersDto);
+            req.getRequestDispatcher("/WEB-INF/view/list.jsp").forward(req, resp);
+        }
+
+
+/*        if (ajax) {
             String id = req.getParameter("id");
             User user = new User();
 
@@ -57,6 +102,7 @@ public class MainServlet extends HttpServlet {
                 resp.setCharacterEncoding("UTF-8");
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
+
                 UserDto userDto = userMapper.toDto(user);
                 String json = new Gson().toJson(userDto);
                 resp.setContentType("application/json");
@@ -69,7 +115,7 @@ public class MainServlet extends HttpServlet {
             List<UserDto> usersDto = userMapper.toDto(users);
             req.setAttribute("usersDto", usersDto);
             req.getRequestDispatcher("/WEB-INF/view/list.jsp").forward(req, resp);
-        }
+        }*/
     }
 
     @Override
@@ -105,7 +151,7 @@ public class MainServlet extends HttpServlet {
         User user = Utils.propertiesToUser(req);
         user = validate.findById(user);
         boolean result = validate.delete(user);
-        if(result) {
+        if (result) {
             resp.setStatus(HttpServletResponse.SC_OK);
         } else {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -126,4 +172,5 @@ public class MainServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
     }
+
 }

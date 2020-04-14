@@ -32,10 +32,24 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User authUser = Utils.getObjectFromSession(req, "user");
-        UserDto userDto = userMapper.toDto(authUser);
-        req.setAttribute("userDto", userDto);
-        req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+
+        //if  !XMLHttpRequst -> open list.jsp and put all users to attribute
+        //if  XMLHttpRequst -> (json) session user
+        //if  XMLHttpRequst & id -> (json) user by id
+
+        boolean ajax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+
+        if (ajax) {
+            User authUser = Utils.getObjectFromSession(req, "user");
+            UserDto userDto = userMapper.toDto(authUser);
+            String json = new Gson().toJson(userDto);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+        } else {
+            req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req, resp);
+        }
 
     }
 
@@ -46,28 +60,25 @@ public class MainServlet extends HttpServlet {
         actions.get(action).accept(req, resp);
     }
 
-    private void update(HttpServletRequest req, HttpServletResponse resp) {
+    void update(HttpServletRequest req, HttpServletResponse resp) {
         User changed = Utils.propertiesToUser(req);
-        User authUser = Utils.getObjectFromSession(req, "user");
-        User user = validate.findById(authUser);
-        validate.update(user, changed);
-        try {
-            UserDto userDto = userMapper.toDto(user);
-            String json = new Gson().toJson(userDto);
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
+        User user = Utils.getObjectFromSession(req, "user");
+        user.setRole(null);
+        boolean result = validate.update(user, changed);
+        resp.setCharacterEncoding("UTF-8");
+        if (result) {
+            String url = req.getRequestURI();
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
+            resp.setHeader("Location", url);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
-
     }
 
-    private void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
-        User authUser = Utils.getObjectFromSession(req, "user");
-        authUser.setPhoto(null);
-        validate.update(authUser);
+    void deleteImg(HttpServletRequest req, HttpServletResponse resp) {
+        User user = Utils.getObjectFromSession(req, "user");
+        user.setPhoto(null);
+        validate.update(user);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 

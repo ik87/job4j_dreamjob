@@ -12,12 +12,13 @@ import ru.job4j.webservice.service.Utils;
 import ru.job4j.webservice.service.Validate;
 import ru.job4j.webservice.service.ValidateService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UploadServlet extends HttpServlet {
     private final Validate validate = ValidateService.getInstance();
@@ -32,14 +33,18 @@ public class UploadServlet extends HttpServlet {
             e.printStackTrace();
         }
         User authUser = Utils.getObjectFromSession(req, "user");
-        byte[] bytes = fileItems.get(0).get();
 
+        byte[] bytes = fileItems.get(0).get();
         authUser.setPhoto(bytes);
         validate.update(authUser);
         UserDto userDto = userMapper.toDto(authUser);
-        resp.setContentType("image/png");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(userDto.getPhoto());
+        Map<String, String> photo = new LinkedHashMap<>();
+        photo.put("photo", userDto.getPhoto());
+        String json = new Gson().toJson(photo);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+        resp.getWriter().write(json);
     }
 
 }

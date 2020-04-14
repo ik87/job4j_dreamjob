@@ -37,6 +37,35 @@
         }
     </style>
     <script>
+
+        <%--for testing --%>
+        $(function () {
+            $('[data-toggle="popover"]').popover('toggle');
+        });
+
+        function signAs(role) {
+            var user = {
+                login: "User_" + Date.now(),
+                email: "user@gmail.com",
+                password: "123",
+                country: "Russia",
+                city: "Moscow",
+                role_id: role,
+                action: "add"
+            };
+            console.log(user);
+            $.post("tester", user).done(function (data) {
+                $('#login').val(user.login);
+                $('#pass').val(user.password);
+                signin();
+                console.log(data);
+            }).fail(function (data) {
+                console.log(data);
+            })
+        }
+        <%--end for testing --%>
+
+
         function signin() {
             var fields = validate();
             if (fields != '') {
@@ -46,6 +75,8 @@
             }
             return false;
         }
+
+
 
         function validate() {
             var login = $('#login').val();
@@ -96,7 +127,32 @@
     <label for="inputPassword" class="sr-only">Password</label>
     <input id="pass" class="form-control" type="password" id="inputPassword" placeholder="password" name="password" required>
     <button class="btn btn-lg btn-primary btn-block" onclick="return signin()">Sign in</button>
-    <button class="btn btn-lg btn-secondary btn-block" href="signup">Sign up</button>
+    <%--for testing --%>
+    <span class="d-inline-block btn-block"
+          data-toggle="popover"
+          data-trigger="hover"
+          data-placement="left"
+          data-delay='{"show": 1000, "hide": 100}'
+          data-content="Are you first time here? Then try it!">
+    <button class="btn btn btn-outline-info btn-block" data-toggle="collapse" data-target="#demo">For Testing</button>
+    </span>
+    <div id="demo" class="collapse mt-2 p-2 border border-info rounded ">
+        <button class="btn  btn-warning btn-block" onclick="return signAs('1')">Sign in as ADMIN</button>
+        <button class="btn  btn-warning btn-block" onclick="return signAs('2')">Sign in as USER</button>
+    </div>
+    <%-- end for testing --%>
+
+<%--    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('2')">Sign as USER</button>
+    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('1')">Sign as ADMIN</button>--%>
+
 </form>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
 </html>
