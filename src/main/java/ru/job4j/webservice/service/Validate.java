@@ -6,7 +6,7 @@ import ru.job4j.webservice.models.User;
 import java.util.List;
 
 public interface Validate {
-    boolean add(User user);
+    User add(User user);
 
     boolean update(User user);
 

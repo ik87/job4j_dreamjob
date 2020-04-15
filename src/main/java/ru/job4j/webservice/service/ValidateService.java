@@ -20,11 +20,10 @@ public class ValidateService implements Validate {
     }
 
     @Override
-    public boolean add(User user) {
-        boolean result = false;
+    public User add(User user) {
+        User result = null;
         if (hasEmptyString(user)) {
-            store.add(user);
-            result = true;
+           result = store.add(user);
         }
         return result;
     }
@@ -33,8 +32,7 @@ public class ValidateService implements Validate {
     public boolean update(User user) {
         boolean result = false;
         if (store.ifExist(user) && hasEmptyString(user)) {
-            store.update(user);
-            result = true;
+            result = store.update(user);
         }
         return result;
     }
@@ -56,6 +54,14 @@ public class ValidateService implements Validate {
 
         if (newUser.getPhoto() != null) {
             oldUser.setPhoto(newUser.getPhoto());
+        }
+
+        if (newUser.getCountry() != null) {
+            oldUser.setCountry(newUser.getCountry());
+        }
+
+        if (newUser.getCity() != null) {
+            oldUser.setCity(newUser.getCity());
         }
 
         if (newUser.getRole() != null && newUser.getRole().getId() != null) {

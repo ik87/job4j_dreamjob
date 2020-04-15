@@ -21,9 +21,9 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
-        if (request.getRequestURI().contains("/signin")) {
+        if (request.getRequestURI().contains("css/") || request.getRequestURI().contains("js/")) {
             chain.doFilter(req, resp);
-        } else if (request.getRequestURI().contains("/signup")) {
+        } else if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/tester")) {
             chain.doFilter(req, resp);
         } else {
             HttpSession session = request.getSession();
@@ -32,7 +32,7 @@ public class AuthFilter implements Filter {
                 User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
                 if (authUser == null) {
                     session.invalidate();
-                    ((HttpServletResponse) resp).sendRedirect("signin");
+                    ((HttpServletResponse) resp).sendRedirect("login");
                     return;
                 } else {
                     session.setAttribute("user", authUser);

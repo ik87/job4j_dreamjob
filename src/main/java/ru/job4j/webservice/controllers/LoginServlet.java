@@ -1,5 +1,6 @@
 package ru.job4j.webservice.controllers;
 
+import ru.job4j.webservice.models.Role;
 import ru.job4j.webservice.models.User;
 import ru.job4j.webservice.service.Utils;
 import ru.job4j.webservice.service.Validate;
@@ -25,20 +26,22 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User user = Utils.propertiesToUser(req);
-        HttpSession session = req.getSession();
-        try {
 
-            User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
+        User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
+
+        HttpSession session = req.getSession();
+        synchronized (session) {
             if (authUser != null) {
                 session.setAttribute("user", authUser);
-                resp.sendRedirect(req.getContextPath() + "/");
+                resp.setCharacterEncoding("UTF-8");
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
-                req.setAttribute("error", "Credential invalid");
-                doGet(req, resp);
+                resp.setCharacterEncoding("UTF-8");
+                resp.setContentType("application/json");
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
         }
+
 
     }
 

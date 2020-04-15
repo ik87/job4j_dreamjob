@@ -22,16 +22,16 @@ public class RoleFilter implements Filter {
         synchronized (session) {
             User user = (User) session.getAttribute("user");
             if (user != null) {
-                if (request.getRequestURI().contains("/signout")) {
+                if (request.getRequestURI().contains("css/") || request.getRequestURI().contains("js/")) {
                     chain.doFilter(req, resp);
-                }  else if (request.getRequestURI().contains("/signup")) {
+                } else if (request.getRequestURI().contains("/signout")) {
                     chain.doFilter(req, resp);
                 } else if (request.getRequestURI().contains("/upload")) {
                     chain.doFilter(req, resp);
                 } else if ("admin".equals(user.getRole().getRole())) {
                     if (request.getRequestURI().contains("/admin")) {
                         chain.doFilter(req, resp);
-                    }  else {
+                    } else {
                         ((HttpServletResponse) resp).sendRedirect("admin");
                         return;
                     }

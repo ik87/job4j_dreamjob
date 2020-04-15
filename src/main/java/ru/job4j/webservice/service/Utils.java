@@ -53,6 +53,8 @@ public class Utils {
         role.setId(stringToInt(req.getParameter("role_id")));
         user.setRole(role);
         user.setCreated(dateStringToMillisecond(req.getParameter("created")));
+        user.setCountry(req.getParameter("country"));
+        user.setCity(req.getParameter("city"));
 
         return user;
     }

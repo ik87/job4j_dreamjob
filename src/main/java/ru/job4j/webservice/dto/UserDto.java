@@ -12,6 +12,8 @@ public class UserDto {
     private String created;
     private String photo;
     private String password;
+    private String country;
+    private String city;
 
     public int getUserId() {
         return userId;
@@ -75,5 +77,21 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

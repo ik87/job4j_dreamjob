@@ -29,16 +29,29 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public void add(User user) {
-        users.computeIfAbsent(id.getAndIncrement(), k -> {
-            user.setId(k);
-            return user;
-        });
+    public synchronized User add(User user) {
+        User result = null;
+        User usr = findByLogin(user);
+        if (usr == null) {
+            users.computeIfAbsent(id.getAndIncrement(), k -> {
+                user.setId(k);
+                return user;
+            });
+            result = user;
+        }
+
+        return result;
     }
 
     @Override
-    public void update(User user) {
-        users.put(user.getId(), user);
+    public synchronized boolean update(User user) {
+        boolean result = false;
+        User usr = findByLogin(user);
+        if (usr != null) {
+            users.put(user.getId(), user);
+            result = true;
+        }
+        return result;
     }
 
     @Override

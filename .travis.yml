@@ -1,4 +1,5 @@
 # используем язык java. Travis CI поддерживает другие языки тоже.
+codecov: true
 language: java
 jdk:
   - openjdk11
