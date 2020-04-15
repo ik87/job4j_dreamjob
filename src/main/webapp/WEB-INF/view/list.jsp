@@ -16,6 +16,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/credential.js"></script>
     <script type="text/javascript" src="js/bing_map.js"></script>
+    <script type="text/javascript" src="js/info-popover.js"></script>
     <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
 
     <script>
@@ -23,52 +24,32 @@
         const URL_POST = "admin";
         const URL_GET_USER_ID = "admin?id=";
         const URL_GET_USER = "admin";
+        const URL_SIGNOUT = "signout";
 
         var sessionUser;
 
         $(function () {
 
-            <%--for testing --%>
-            $(function () {
-                //add
-                var duration = 5000;
-                var time = 0;
-                var finish = duration;
-
-
-                showPopover('ul li:eq(0)', time, finish, {
-                    placement: 'bottom',
-                    content: 'hello'
-                })
-                time += duration; //2000
-                finish += duration; //4000
-                showPopover('ul li:eq(1)', time, finish, {
-                    placement: 'bottom',
-                    content: 'hello'
-                })
-                time += duration;
-                finish += duration;
-                showPopover('ul li:eq(2)', time, finish, {
-                    placement: 'bottom',
-                    content: 'hello'
-                })
-
-            })
-
-
-          function showPopover(adr, time, duration, options) {
-              setTimeout(()=> $(adr).popover(options).popover('show'), time);
-              setTimeout(()=> $(adr).popover('hide'), duration);
-            }
-
-            <%--end for testing --%>
-
-
+            //populate table after login
             $.get(URL_GET_USER, function (data) {
-
                 sessionUser = data.sessionUser[0];
                 populateTable(data.all, sessionUser).then(initOperations);
             })
+            //signout
+            $('#signout_btn').on('click', function () {
+                $.get(URL_SIGNOUT,function () {
+                    location.reload();
+                });
+            })
+
+            //animation information
+
+            showPopover('#info_btn',1000, 4000, {
+                placement: 'bottom',
+                content: 'Click me!'
+            });
+
+            $('#info_btn').on('click', animInfoPopoverForList);
 
         });
 
@@ -93,11 +74,12 @@
         }
 
         function initOperations() {
+            //when click on row
             $('tbody tr td:not(:last-child)').on('click',function () {
                 var tr = $(this).closest('tr');
                 modalProfileShow(tr.attr('id'));
             });
-
+            //when click on btn remove
             $('tbody tr td:last-child button').on('click', function () {
                 var tr = $(this).closest('tr');
                 remove(tr.attr('id'));
@@ -125,7 +107,7 @@
     <div class="row-cols-1">
 
         <%--navigation menu--%>
-        <div class="col">
+        <div id="navi" class="col">
             <ul class="nav">
                 <li class="nav-item">
                     <button type="button" class="btn btn-link nav-link"
@@ -139,7 +121,14 @@
                     </button>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="signout">Sign out</a>
+                    <button id="signout_btn" type="button" class="btn btn-link nav-link">
+                        Sign out
+                    </button>
+                </li>
+                <li class="nav-item ">
+                    <button id="info_btn" type="button" class="btn btn-link nav-link">
+                        Help
+                    </button>
                 </li>
             </ul>
         </div>

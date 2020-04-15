@@ -45,7 +45,7 @@
 
         function signAs(role) {
             var user = {
-                login: "User_" + Date.now(),
+                login: "User_" + parseInt(Date.now() / 1000, 10),
                 email: "user@gmail.com",
                 password: "123",
                 country: "Russia",
@@ -120,14 +120,22 @@
     <title>service entrance</title>
 </head>
 <body class="text-center">
-<form class="form-signin" method="post">
+<div class="container">
+<form class="form-signin">
     <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
     <label for="inputLogin" class="sr-only">Login</label>
     <input id="login" class="form-control" type="text" id="inputLogin" placeholder="login" name="login" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
     <input id="pass" class="form-control" type="password" id="inputPassword" placeholder="password" name="password" required>
     <button class="btn btn-lg btn-primary btn-block" onclick="return signin()">Sign in</button>
+
+
+<%--    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('2')">Sign as USER</button>
+    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('1')">Sign as ADMIN</button>--%>
+
+</form>
     <%--for testing --%>
+<div class="form-signin">
     <span class="d-inline-block btn-block"
           data-toggle="popover"
           data-trigger="hover"
@@ -140,13 +148,9 @@
         <button class="btn  btn-warning btn-block" onclick="return signAs('1')">Sign in as ADMIN</button>
         <button class="btn  btn-warning btn-block" onclick="return signAs('2')">Sign in as USER</button>
     </div>
+</div>
     <%-- end for testing --%>
-
-<%--    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('2')">Sign as USER</button>
-    <button class="btn btn-lg btn-warning btn-block" onclick="return signAs('1')">Sign as ADMIN</button>--%>
-
-</form>
-
+</div>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

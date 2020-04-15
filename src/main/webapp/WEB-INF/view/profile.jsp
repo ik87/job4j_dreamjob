@@ -25,34 +25,37 @@
         const URL_UPLOAD_IMG = "user/upload";
         const URL_POST = "user";
         const URL_GET = "user";
+        const URL_SIGNOUT = "signout";
 
         $(function () {
             //load data
             $.get(URL_GET, loadProfile);
+
+            //signout
+            $('#signout_btn').on('click', function () {
+                $.get(URL_SIGNOUT,function () {
+                    location.reload();
+                });
+            })
         });
 
     </script>
 
 </head>
 <body>
-<div class="container">
+<div class="container-sm">
     <div class="row  m-3">
         <!--navigation-->
         <div class="col-12">
             <ul class="nav">
-                <c:if test="${sessionScope.user.role.role eq 'admin'}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/${sessionScope.user.role.role}">Users
-                            list</a>
-                    </li>
-                </c:if>
 
                 <li class="nav-item">
                     <button type="button" class="btn btn-link nav-link" data-toggle="modal" data-target="#editModal" >Edit</button>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/signout">Sign out</a>
+                <li class="nav-item">
+                    <button id="signout_btn" type="button" class="btn btn-link nav-link" >Sign out</button>
                 </li>
+
             </ul>
             <hr>
         </div>
