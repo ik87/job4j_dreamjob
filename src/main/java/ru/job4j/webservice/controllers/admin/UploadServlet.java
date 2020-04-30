@@ -7,11 +7,10 @@ import ru.job4j.webservice.dto.UserDto;
 import ru.job4j.webservice.mapers.UserMapper;
 import ru.job4j.webservice.mapers.UserMapperImpl;
 import ru.job4j.webservice.models.User;
-import ru.job4j.webservice.service.Utils;
+import ru.job4j.webservice.controllers.Utils;
 import ru.job4j.webservice.service.Validate;
 import ru.job4j.webservice.service.ValidateService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

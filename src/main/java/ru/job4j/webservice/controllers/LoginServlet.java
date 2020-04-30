@@ -1,8 +1,6 @@
 package ru.job4j.webservice.controllers;
 
-import ru.job4j.webservice.models.Role;
 import ru.job4j.webservice.models.User;
-import ru.job4j.webservice.service.Utils;
 import ru.job4j.webservice.service.Validate;
 import ru.job4j.webservice.service.ValidateService;
 
@@ -30,20 +28,15 @@ public class LoginServlet extends HttpServlet {
         User authUser = user != null ? validate.findByLoginAndPassword(user) : null;
 
         HttpSession session = req.getSession();
-        synchronized (session) {
-            if (authUser != null) {
-                session.setAttribute("user", authUser);
-                resp.setCharacterEncoding("UTF-8");
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } else {
-                resp.setCharacterEncoding("UTF-8");
-                resp.setContentType("application/json");
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
+
+        if (authUser != null) {
+            session.setAttribute("user", authUser);
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            resp.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-
-
     }
-
-
 }

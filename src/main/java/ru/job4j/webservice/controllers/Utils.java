@@ -1,4 +1,4 @@
-package ru.job4j.webservice.service;
+package ru.job4j.webservice.controllers;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
