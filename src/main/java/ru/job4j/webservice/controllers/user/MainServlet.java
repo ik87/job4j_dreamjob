@@ -63,7 +63,7 @@ public class MainServlet extends HttpServlet {
     void update(HttpServletRequest req, HttpServletResponse resp) {
         User changed = Utils.propertiesToUser(req);
         User user = Utils.getObjectFromSession(req, "user");
-        user.setRole(null);
+        changed.setRole(null);
         boolean result = validate.update(user, changed);
         resp.setCharacterEncoding("UTF-8");
         if (result) {
