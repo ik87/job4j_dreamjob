@@ -15,21 +15,20 @@ import java.util.Map;
  * <p>
  * If  request.getRequestURI() contains:
  * [/css] or [/js] or [/tester] or [/signout] use this:allAllowed
- * [/] use this:root
+ * [/] use this:redirectToLogin
  * [/login] use this:onlyLoginPath
  * [/admin] use this:onlyAdminPath
  * [/user] use this:onlyUserPath
  * <p>
- * if other user this:notFoundPage
+ * if other use this:notFoundPage
  *
  * @author Kosolapov Ilya (d_dexter@mail.ru)
  * @since 1.0
  */
 public class SecureFilter implements Filter {
-    private Map<String, DoFilter> filter;
+    private final Map<String, DoFilter> filter;
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public SecureFilter() {
         filter = new LinkedHashMap<>();
         filter.put("/admin", this::onlyAdminPath);
         filter.put("/user", this::onlyUserPath);
@@ -38,7 +37,12 @@ public class SecureFilter implements Filter {
         filter.put("/login", this::onlyLoginPath);
         filter.put("/tester", this::allAllowed);
         filter.put("/signout", this::allAllowed);
-        filter.put("/", this::root);
+        filter.put("/", this::redirectToLogin);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
     }
 
 
@@ -63,7 +67,7 @@ public class SecureFilter implements Filter {
         return value;
     }
 
-    private void onlyLoginPath(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    void onlyLoginPath(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
         User user = Utils.getObjectFromSession(req, "user");
         if (user != null) {
             String role = user.getRole().getRole();
@@ -104,7 +108,7 @@ public class SecureFilter implements Filter {
         resp.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
-    void root(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    void redirectToLogin(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
         resp.sendRedirect("login");
     }
 
